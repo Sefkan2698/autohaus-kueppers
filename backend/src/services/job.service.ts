@@ -46,7 +46,17 @@ export class JobService {
   }
 
   // Job aktualisieren
-  async update(id: string, data: Partial<typeof data>) {
+  async update(id: string, data: {
+    title?: string;
+    department?: string;
+    location?: string;
+    type?: JobType;
+    description?: string;
+    requirements?: string[];
+    benefits?: string[];
+    salary?: string;
+    isActive?: boolean;
+  }) {
     return await prisma.job.update({
       where: { id },
       data,

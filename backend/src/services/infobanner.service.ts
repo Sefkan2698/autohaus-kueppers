@@ -51,7 +51,17 @@ export class InfoBannerService {
   }
 
   // Banner aktualisieren
-  async update(id: string, data: Partial<typeof data>) {
+  async update(id: string, data: {
+    title?: string;
+    message?: string;
+    type?: BannerType;
+    link?: string;
+    linkText?: string;
+    startDate?: Date;
+    endDate?: Date;
+    priority?: number;
+    isActive?: boolean;
+  }) {
     return await prisma.infoBanner.update({
       where: { id },
       data,

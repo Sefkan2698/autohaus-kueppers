@@ -15,8 +15,14 @@ export class VehicleService {
     const where: Prisma.VehicleWhereInput = {};
 
     if (filters?.type) where.type = filters.type;
-    if (filters?.minPrice) where.price = { gte: filters.minPrice };
-    if (filters?.maxPrice) where.price = { ...where.price, lte: filters.maxPrice };
+
+    // Preis-Filter kombinieren
+    if (filters?.minPrice || filters?.maxPrice) {
+      where.price = {};
+      if (filters?.minPrice) where.price.gte = filters.minPrice;
+      if (filters?.maxPrice) where.price.lte = filters.maxPrice;
+    }
+
     if (filters?.brand) where.brand = { contains: filters.brand, mode: 'insensitive' };
     if (filters?.fuelType) where.fuelType = filters.fuelType;
     if (filters?.transmission) where.transmission = filters.transmission;
@@ -78,7 +84,26 @@ export class VehicleService {
   }
 
   // Fahrzeug aktualisieren
-  async update(id: string, data: Partial<typeof data>) {
+  async update(id: string, data: {
+    title?: string;
+    type?: VehicleType;
+    brand?: string;
+    model?: string;
+    price?: number;
+    mileage?: number;
+    yearBuilt?: number;
+    firstRegistration?: Date;
+    fuelType?: string;
+    transmission?: string;
+    power?: number;
+    color?: string;
+    doors?: number;
+    seats?: number;
+    features?: string[];
+    description?: string;
+    condition?: string;
+    isActive?: boolean;
+  }) {
     return await prisma.vehicle.update({
       where: { id },
       data,

@@ -98,7 +98,10 @@ nano .env
 ```
 
 **Wichtige Werte in der .env ändern:**
+- `POSTGRES_USER` - Datenbank-Benutzername (Standard: userdb)
 - `POSTGRES_PASSWORD` - Starkes Passwort
+- `POSTGRES_DB` - Datenbank-Name (Standard: kueppersdb)
+- `DATABASE_URL` - Wird automatisch von Docker Compose aus den obigen Werten zusammengesetzt
 - `JWT_SECRET` - Langer zufälliger String
 - `MASTER_REGISTRATION_KEY` - Sicherer Key
 - `MAIL_*` - Deine SMTP-Server-Daten

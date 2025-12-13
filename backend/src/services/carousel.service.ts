@@ -26,6 +26,7 @@ export class CarouselService {
     subtitle?: string;
     link?: string;
     order?: number;
+    isActive?: boolean;
   }) {
     return await prisma.carouselImage.create({
       data,
@@ -33,7 +34,15 @@ export class CarouselService {
   }
 
   // Carousel-Bild aktualisieren
-  async update(id: string, data: Partial<typeof data>) {
+  async update(id: string, data: {
+    url?: string;
+    alt?: string;
+    title?: string;
+    subtitle?: string;
+    link?: string;
+    order?: number;
+    isActive?: boolean;
+  }) {
     return await prisma.carouselImage.update({
       where: { id },
       data,

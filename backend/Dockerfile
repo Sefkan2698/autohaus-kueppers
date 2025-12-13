@@ -25,6 +25,9 @@ COPY --from=deps /app/node_modules ./node_modules
 # Copy source code
 COPY . .
 
+# Set dummy DATABASE_URL for build-time (not used, but required by prisma.config.ts)
+ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+
 # Generate Prisma Client
 RUN npx prisma generate
 

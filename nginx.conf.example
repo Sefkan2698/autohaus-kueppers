@@ -1,0 +1,86 @@
+# Nginx Reverse Proxy Konfiguration für Autohaus Web-App
+# Datei speichern unter: /etc/nginx/sites-available/autohaus
+# Dann aktivieren mit: sudo ln -s /etc/nginx/sites-available/autohaus /etc/nginx/sites-enabled/
+
+server {
+    listen 80;
+    listen [::]:80;
+
+    # ÄNDERE HIER DEINE DOMAIN
+    server_name deine-domain.de www.deine-domain.de;
+
+    # Maximale Upload-Größe für Fahrzeugbilder
+    client_max_body_size 20M;
+
+    # Logging
+    access_log /var/log/nginx/autohaus_access.log;
+    error_log /var/log/nginx/autohaus_error.log;
+
+    # Frontend (Next.js)
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+
+        # Timeout-Einstellungen
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }
+
+    # Backend API
+    location /api/ {
+        proxy_pass http://localhost:3001/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+
+        # Timeout für längere API-Anfragen
+        proxy_connect_timeout 90s;
+        proxy_send_timeout 90s;
+        proxy_read_timeout 90s;
+    }
+
+    # Uploads-Ordner (Fahrzeugbilder, etc.)
+    location /uploads/ {
+        proxy_pass http://localhost:3001/uploads/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        # Cache-Einstellungen für Bilder
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # Let's Encrypt Challenge (für SSL-Zertifikat)
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+}
+
+# HTTPS-Konfiguration (wird von certbot automatisch hinzugefügt)
+# Nach dem Ausführen von certbot wird dieser Block automatisch erstellt
+# server {
+#     listen 443 ssl http2;
+#     listen [::]:443 ssl http2;
+#     server_name deine-domain.de www.deine-domain.de;
+#
+#     ssl_certificate /etc/letsencrypt/live/deine-domain.de/fullchain.pem;
+#     ssl_certificate_key /etc/letsencrypt/live/deine-domain.de/privkey.pem;
+#     include /etc/letsencrypt/options-ssl-nginx.conf;
+#     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+#
+#     # ... Rest der Konfiguration wie oben ...
+# }

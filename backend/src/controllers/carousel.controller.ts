@@ -1,0 +1,114 @@
+import express from 'express';
+import carouselService from '../services/carousel.service.js';
+import { convertToWebP } from '../utils/image.js';
+import path from 'path';
+
+export class CarouselController {
+  // Alle Carousel-Bilder abrufen
+  async getAll(req: express.Request, res: express.Response) {
+    try {
+      const { isActive } = req.query;
+      const active = isActive === 'true' ? true : isActive === 'false' ? false : undefined;
+
+      const images = await carouselService.getAll(active);
+      res.json(images);
+    } catch (error) {
+      res.status(500).json({ error: 'Fehler beim Abrufen der Bilder' });
+    }
+  }
+
+  // Einzelnes Carousel-Bild abrufen
+  async getById(req: express.Request, res: express.Response) {
+    try {
+      const { id } = req.params;
+      const image = await carouselService.getById(id);
+
+      if (!image) {
+        res.status(404).json({ error: 'Bild nicht gefunden' });
+        return;
+      }
+
+      res.json(image);
+    } catch (error) {
+      res.status(500).json({ error: 'Fehler beim Abrufen des Bildes' });
+    }
+  }
+
+  // Carousel-Bild erstellen (Admin) - mit Datei-Upload
+  async create(req: express.Request, res: express.Response) {
+    try {
+      if (!req.file) {
+        res.status(400).json({ error: 'Keine Datei hochgeladen' });
+        return;
+      }
+
+      // Bild zu WebP konvertieren
+      const webpPath = await convertToWebP(req.file.path);
+      const filename = path.basename(webpPath);
+      const url = `/uploads/${filename}`;
+
+      // Carousel-Eintrag erstellen
+      const { alt, title, subtitle, link, order, isActive } = req.body;
+      const image = await carouselService.create({
+        url,
+        alt,
+        title,
+        subtitle,
+        link,
+        order: order ? parseInt(order) : undefined,
+        isActive: isActive === 'true' || isActive === true,
+      });
+
+      res.status(201).json(image);
+    } catch (error) {
+      console.error('Error creating carousel image:', error);
+      res.status(400).json({ error: 'Fehler beim Erstellen des Bildes' });
+    }
+  }
+
+  // Carousel-Bild aktualisieren (Admin)
+  async update(req: express.Request, res: express.Response) {
+    try {
+      const { id } = req.params;
+      const image = await carouselService.update(id, req.body);
+      res.json(image);
+    } catch (error) {
+      res.status(400).json({ error: 'Fehler beim Aktualisieren des Bildes' });
+    }
+  }
+
+  // Carousel-Bild löschen (Admin)
+  async delete(req: express.Request, res: express.Response) {
+    try {
+      const { id } = req.params;
+      await carouselService.delete(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(400).json({ error: 'Fehler beim Löschen des Bildes' });
+    }
+  }
+
+  // Carousel-Bild aktivieren/deaktivieren (Admin)
+  async toggleActive(req: express.Request, res: express.Response) {
+    try {
+      const { id } = req.params;
+      const image = await carouselService.toggleActive(id);
+      res.json(image);
+    } catch (error) {
+      res.status(400).json({ error: 'Fehler beim Umschalten des Status' });
+    }
+  }
+
+  // Reihenfolge ändern (Admin)
+  async reorder(req: express.Request, res: express.Response) {
+    try {
+      const { images } = req.body;
+      const updated = await carouselService.reorder(images);
+      res.json(updated);
+    } catch (error) {
+      res.status(400).json({ error: 'Fehler beim Ändern der Reihenfolge' });
+    }
+  }
+}
+
+export default new CarouselController();

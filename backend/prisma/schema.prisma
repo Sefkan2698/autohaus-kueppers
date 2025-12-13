@@ -1,0 +1,170 @@
+// Prisma Schema für Autohaus Web-Anwendung
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Admin User Management
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String   // bcrypt hashed
+  name      String
+  role      Role     @default(ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+enum Role {
+  ADMIN
+  SUPER_ADMIN
+}
+
+// Fahrzeugverwaltung (Vorführwagen & Gebrauchtwagen)
+model Vehicle {
+  id              String        @id @default(uuid())
+  title           String        // z.B. "BMW 3er 320d"
+  type            VehicleType   // DEMO_CAR oder USED_CAR
+  brand           String        // Marke
+  model           String        // Modell
+  price           Decimal       @db.Decimal(10, 2)
+  mileage         Int           // Kilometerstand
+  yearBuilt       Int           // Baujahr
+  firstRegistration DateTime?   // Erstzulassung
+  fuelType        String        // Kraftstoff (Diesel, Benzin, Elektro, Hybrid)
+  transmission    String        // Getriebe (Automatik, Manuell)
+  power           Int?          // PS/kW
+  color           String?       // Farbe
+  doors           Int?          // Türen
+  seats           Int?          // Sitzplätze
+  features        String[]      // Ausstattung als Array
+  description     String        @db.Text
+  condition       String?       // Zustand (Neuwertig, Gut, etc.)
+  images          VehicleImage[]
+  isActive        Boolean       @default(true)
+  viewCount       Int           @default(0)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([type, isActive])
+  @@index([price])
+  @@map("vehicles")
+}
+
+enum VehicleType {
+  DEMO_CAR      // Vorführwagen
+  USED_CAR      // Gebrauchtwagen
+  YEAR_CAR      // Jahreswagen
+}
+
+// Fahrzeugbilder
+model VehicleImage {
+  id        String   @id @default(uuid())
+  vehicleId String
+  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  url       String   // Bild-URL oder Pfad
+  alt       String?  // Alt-Text für SEO
+  order     Int      @default(0) // Sortierung
+  createdAt DateTime @default(now())
+
+  @@index([vehicleId])
+  @@map("vehicle_images")
+}
+
+// Jobstellen-Verwaltung
+model Job {
+  id          String   @id @default(uuid())
+  title       String   // Jobtitel
+  department  String?  // Abteilung
+  location    String   // Standort
+  type        JobType  // Vollzeit, Teilzeit, etc.
+  description String   @db.Text
+  requirements String[] // Anforderungen als Array
+  benefits    String[] // Benefits als Array
+  salary      String?  // Gehaltsangabe (optional)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive])
+  @@map("jobs")
+}
+
+enum JobType {
+  FULL_TIME     // Vollzeit
+  PART_TIME     // Teilzeit
+  INTERNSHIP    // Praktikum
+  APPRENTICESHIP // Ausbildung
+}
+
+// Infobanner auf Landing-Page
+model InfoBanner {
+  id          String   @id @default(uuid())
+  title       String
+  message     String   @db.Text
+  type        BannerType @default(INFO)
+  link        String?  // Optional: Link zu mehr Infos
+  linkText    String?  // Link-Text
+  isActive    Boolean  @default(true)
+  startDate   DateTime? // Optional: Banner ab Datum anzeigen
+  endDate     DateTime? // Optional: Banner bis Datum anzeigen
+  priority    Int      @default(0) // Höhere Priorität = weiter oben
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive, priority])
+  @@map("info_banners")
+}
+
+enum BannerType {
+  INFO      // Informativ (blau)
+  SUCCESS   // Erfolg (grün)
+  WARNING   // Warnung (gelb)
+  ALERT     // Wichtig (rot)
+}
+
+// Carousel-Bilder für Startseite
+model CarouselImage {
+  id        String   @id @default(uuid())
+  url       String   // Bild-URL oder Pfad
+  alt       String?  // Alt-Text für SEO
+  title     String?  // Optionaler Titel im Slider
+  subtitle  String?  // Optionaler Untertitel
+  link      String?  // Optional: Link bei Klick
+  order     Int      @default(0) // Sortierung
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive, order])
+  @@map("carousel_images")
+}
+
+// Kontaktformular-Einträge (Optional: für Archivierung)
+model ContactSubmission {
+  id          String   @id @default(uuid())
+  name        String
+  email       String
+  phone       String?
+  message     String   @db.Text
+  subject     String?  // Optional: Betreff
+  vehicleId   String?  // Optional: Bezug zu Fahrzeug
+  status      SubmissionStatus @default(NEW)
+  createdAt   DateTime @default(now())
+  
+  @@index([status, createdAt])
+  @@map("contact_submissions")
+}
+
+enum SubmissionStatus {
+  NEW         // Neu
+  READ        // Gelesen
+  REPLIED     // Beantwortet
+  ARCHIVED    // Archiviert
+}

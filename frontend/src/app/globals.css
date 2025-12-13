@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #CB0F13;
+  --color-primary-dark: #A00C0F;
+  --color-primary-light: #E5181C;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Swiper Touch-Optimierungen für Mobile */
+.swiper {
+  touch-action: manipulation;
+}
+
+.swiper-slide {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Erlaube horizontales Swipen */
+.swiper-wrapper {
+  touch-action: pan-x pan-y;
+}
+
+/* DnD-Kit Touch-Optimierungen für Mobile Drag & Drop */
+[data-dnd-kit-sortable-wrapper] {
+  touch-action: manipulation;
+}
+
+button[data-sortable-handle],
+button.cursor-grab {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}

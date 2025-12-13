@@ -58,7 +58,7 @@ export default function AdminInfobannerPage() {
     try {
       const token = localStorage.getItem('adminToken');
       // ← WICHTIG: ?admin=true hinzugefügt!
-      const response = await fetch('${API_URL}/api/infobanner?admin=true', {
+      const response = await fetch(`${API_URL}/api/infobanner?admin=true`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -82,7 +82,7 @@ export default function AdminInfobannerPage() {
       const token = localStorage.getItem('adminToken');
       const url = editingBanner
         ? `${API_URL}/api/infobanner/${editingBanner.id}`
-        : '${API_URL}/api/infobanner';
+        : `${API_URL}/api/infobanner`;
       const method = editingBanner ? 'PUT' : 'POST';
 
       const response = await fetch(url, {

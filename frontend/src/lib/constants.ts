@@ -1,5 +1,8 @@
 // API Configuration
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+// In production: Use relative path /api (Nginx routes to backend)
+// In development: Use full URL http://localhost:3001
+export const API_URL = process.env.NEXT_PUBLIC_API_URL ||
+  (process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:3001');
 
 export const CONTENT = {
   phone: '+49 2823 3143',

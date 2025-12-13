@@ -51,15 +51,13 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api}
     container_name: autohaus-frontend
     restart: always
     ports:
       - "3000:3000"
     environment:
-      # Für lokales Testen: http://localhost:3001
-      # Für Production mit Nginx: /api (Nginx leitet zu Backend weiter)
-      # Für Production mit Domain ohne Nginx: http://deine-domain.de:3001
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
       NODE_ENV: production
     networks:
       - autohaus-network

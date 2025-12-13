@@ -25,10 +25,6 @@ const nextConfig: NextConfig = {
     dangerouslyAllowSVG: true,
     contentDispositionType: 'inline',
   },
-  // Disable image optimization für localhost in Entwicklung
-  experimental: {
-    allowedLocalUrls: ['http://localhost:3001', 'http://backend:3001'],
-  },
 };
 
 export default nextConfig;

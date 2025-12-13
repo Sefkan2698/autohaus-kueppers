@@ -3,7 +3,8 @@ import cors from 'cors';
 const allowedOrigins = [
   'http://localhost:3000', // Next.js Dev
   'http://localhost:3001', // Falls Frontend auf anderem Port
-  'https://deine-domain.de', // Production Domain
+  'https://autohausk.sakaits.com', // Production Domain
+  'http://autohausk.sakaits.com', // Production Domain (HTTP)
 ];
 
 export const corsOptions: cors.CorsOptions = {

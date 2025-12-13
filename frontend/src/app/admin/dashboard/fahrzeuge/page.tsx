@@ -95,7 +95,7 @@ export default function AdminFahrzeugePage() {
   const fetchVehicles = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('${API_URL}/api/vehicles', {
+      const response = await fetch(`${API_URL}/api/vehicles`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -241,7 +241,7 @@ export default function AdminFahrzeugePage() {
 
       const url = editingVehicle
         ? `${API_URL}/api/vehicles/${editingVehicle.id}`
-        : '${API_URL}/api/vehicles';
+        : `${API_URL}/api/vehicles`;
 
       const method = editingVehicle ? 'PUT' : 'POST';
 

@@ -177,7 +177,7 @@ export default function AdminCarouselPage() {
   const fetchImages = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('${API_URL}/api/carousel', {
+      const response = await fetch(`${API_URL}/api/carousel`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -208,7 +208,7 @@ export default function AdminCarouselPage() {
         formData.append('order', String(images.length + 1));
         formData.append('isActive', 'true');
 
-        const response = await fetch('${API_URL}/api/carousel', {
+        const response = await fetch(`${API_URL}/api/carousel`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${token}`,

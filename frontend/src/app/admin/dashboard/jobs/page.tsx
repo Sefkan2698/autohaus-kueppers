@@ -68,7 +68,7 @@ export default function AdminJobsPage() {
   const fetchJobs = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('${API_URL}/api/jobs', {
+      const response = await fetch(`${API_URL}/api/jobs`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -99,7 +99,7 @@ export default function AdminJobsPage() {
       const token = localStorage.getItem('adminToken');
       const url = editingJob
         ? `${API_URL}/api/jobs/${editingJob.id}`
-        : '${API_URL}/api/jobs';
+        : `${API_URL}/api/jobs`;
       const method = editingJob ? 'PUT' : 'POST';
 
       const response = await fetch(url, {

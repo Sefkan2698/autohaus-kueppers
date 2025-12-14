@@ -7,6 +7,8 @@ export const apiLimiter = rateLimit({
   message: 'Zu viele Anfragen, bitte später erneut versuchen',
   standardHeaders: true,
   legacyHeaders: false,
+  // Validierung deaktivieren - wir vertrauen nur Nginx als Proxy
+  validate: { trustProxy: false },
 });
 
 // Strenger Limiter für Auth Routes (Login/Register)
@@ -17,6 +19,7 @@ export const authLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   skipSuccessfulRequests: true, // Erfolgreiche Requests zählen nicht
+  validate: { trustProxy: false },
 });
 
 // Limiter für Kontaktformular
@@ -26,6 +29,7 @@ export const contactLimiter = rateLimit({
   message: 'Zu viele Kontaktanfragen, bitte später erneut versuchen',
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { trustProxy: false },
 });
 
 // Limiter für File Uploads
@@ -35,4 +39,5 @@ export const uploadLimiter = rateLimit({
   message: 'Zu viele Uploads, bitte später erneut versuchen',
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { trustProxy: false },
 });

@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
-import { CONTENT } from '@/lib/constants';
+import { CONTENT, API_URL } from '@/lib/constants';
 import GoogleMapConsent from '@/components/GoogleMapConsent';
 import { useState } from 'react';
 
@@ -21,13 +21,29 @@ export default function KontaktPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitStatus('idle');
 
-    // TODO: Backend API Integration
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const response = await fetch(`${API_URL}/api/contact/submit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Fehler beim Senden der Nachricht');
+      }
+
       setSubmitStatus('success');
       setFormData({ name: '', email: '', phone: '', message: '', subject: '' });
-    }, 1000);
+    } catch (error) {
+      console.error('Fehler beim Senden:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -221,6 +237,12 @@ export default function KontaktPage() {
                   {submitStatus === 'success' && (
                     <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
                       Vielen Dank! Ihre Nachricht wurde erfolgreich versendet.
+                    </div>
+                  )}
+
+                  {submitStatus === 'error' && (
+                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                      Fehler beim Senden der Nachricht. Bitte versuchen Sie es später erneut.
                     </div>
                   )}
 

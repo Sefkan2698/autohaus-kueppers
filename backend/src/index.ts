@@ -13,8 +13,9 @@ import { errorHandler, notFoundHandler } from './middleware/error.middleware.js'
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Trust proxy - wichtig wenn hinter Nginx/Reverse Proxy
-app.set('trust proxy', true);
+// Trust proxy - vertraue nur dem ersten Proxy (Nginx)
+// 1 = nur der erste Hop wird als vertrauenswürdig angesehen
+app.set('trust proxy', 1);
 
 // Middleware
 app.use(express.json());

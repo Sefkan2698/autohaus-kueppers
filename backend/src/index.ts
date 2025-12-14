@@ -13,6 +13,9 @@ import { errorHandler, notFoundHandler } from './middleware/error.middleware.js'
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Trust proxy - wichtig wenn hinter Nginx/Reverse Proxy
+app.set('trust proxy', true);
+
 // Middleware
 app.use(express.json());
 app.use(corsMiddleware);

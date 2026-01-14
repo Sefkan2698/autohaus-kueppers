@@ -21,12 +21,12 @@ const storage = multer.diskStorage({
 
 // Nur Bilder erlauben
 const fileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-  const allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-  
+  const allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/avif'];
+
   if (allowedMimes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error('Nur JPEG, PNG und WebP Bilder erlaubt'));
+    cb(new Error('Nur JPEG, PNG, WebP und AVIF Bilder erlaubt'));
   }
 };
 

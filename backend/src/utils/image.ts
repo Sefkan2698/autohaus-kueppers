@@ -4,7 +4,11 @@ import fs from 'fs';
 
 export const convertToWebP = async (filePath: string): Promise<string> => {
   const parsedPath = path.parse(filePath);
-  const webpPath = path.join(parsedPath.dir, `${parsedPath.name}.webp`);
+  const isAlreadyWebP = parsedPath.ext.toLowerCase() === '.webp';
+
+  // Wenn bereits WebP, nur optimieren mit temporärem Namen
+  const tempPath = path.join(parsedPath.dir, `${parsedPath.name}_temp.webp`);
+  const finalPath = path.join(parsedPath.dir, `${parsedPath.name}.webp`);
 
   // Zu WebP konvertieren + komprimieren
   await sharp(filePath)
@@ -13,12 +17,19 @@ export const convertToWebP = async (filePath: string): Promise<string> => {
       fit: 'inside',
       withoutEnlargement: true,
     })
-    .toFile(webpPath);
+    .toFile(tempPath);
 
   // Original löschen
   fs.unlinkSync(filePath);
 
-  return webpPath;
+  // Temp-Datei umbenennen
+  if (isAlreadyWebP) {
+    fs.renameSync(tempPath, finalPath);
+  } else {
+    fs.renameSync(tempPath, finalPath);
+  }
+
+  return finalPath;
 };
 
 export const deleteImage = (filePath: string) => {

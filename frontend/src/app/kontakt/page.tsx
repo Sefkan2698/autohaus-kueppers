@@ -1,12 +1,14 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { MapPin, Phone, Mail } from 'lucide-react';
 import { CONTENT, API_URL } from '@/lib/constants';
 import GoogleMapConsent from '@/components/GoogleMapConsent';
-import { useState } from 'react';
 
-export default function KontaktPage() {
+function ContactFormInner() {
+  const searchParams = useSearchParams();
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -17,6 +19,20 @@ export default function KontaktPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  useEffect(() => {
+    const betreff = searchParams.get('betreff');
+    const fahrzeug = searchParams.get('fahrzeug');
+    const job = searchParams.get('job');
+
+    if (betreff) {
+      setFormData(prev => ({ ...prev, subject: betreff }));
+    } else if (fahrzeug) {
+      setFormData(prev => ({ ...prev, subject: `Anfrage: ${fahrzeug}` }));
+    } else if (job) {
+      setFormData(prev => ({ ...prev, subject: `Bewerbung: ${job}` }));
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,231 +63,239 @@ export default function KontaktPage() {
   };
 
   return (
-    <main>
-      {/* Hero Section */}
-      <section className="pt-24 pb-12 md:pb-16 bg-gradient-to-br from-slate-50 via-white to-slate-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            className="text-center"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 md:mb-6">
-              <span className="text-primary">Kontakt</span> - Wir sind für Sie da!
-            </h1>
-            <p className="text-base md:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Haben Sie Fragen zu unseren Fahrzeugen oder Services? Vereinbaren Sie einen Termin oder
-              besuchen Sie uns direkt vor Ort in Goch.
-            </p>
-          </motion.div>
+    <form onSubmit={handleSubmit} className="space-y-5">
+      <div className="grid md:grid-cols-2 gap-5">
+        <div>
+          <label htmlFor="name" className="block text-sm text-neutral-600 mb-2">
+            Name *
+          </label>
+          <input
+            type="text"
+            id="name"
+            required
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            className="w-full px-4 py-3 bg-white border border-neutral-200 text-neutral-900 focus:outline-none focus:border-neutral-400 transition-colors"
+          />
         </div>
-      </section>
 
-      <section className="py-12 md:py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-8 md:gap-12">
-            {/* Contact Information */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-8">
-                Kontaktinformationen
-              </h2>
+        <div>
+          <label htmlFor="email" className="block text-sm text-neutral-600 mb-2">
+            E-Mail *
+          </label>
+          <input
+            type="email"
+            id="email"
+            required
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            className="w-full px-4 py-3 bg-white border border-neutral-200 text-neutral-900 focus:outline-none focus:border-neutral-400 transition-colors"
+          />
+        </div>
+      </div>
 
-              <div className="space-y-6">
-                {/* Address */}
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">Adresse</h3>
-                    <p className="text-gray-600">
-                      {CONTENT.address.street}
-                      <br />
-                      {CONTENT.address.city}
-                      <br />
-                      {CONTENT.address.country}
-                    </p>
-                  </div>
+      <div className="grid md:grid-cols-2 gap-5">
+        <div>
+          <label htmlFor="phone" className="block text-sm text-neutral-600 mb-2">
+            Telefon
+          </label>
+          <input
+            type="tel"
+            id="phone"
+            value={formData.phone}
+            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+            className="w-full px-4 py-3 bg-white border border-neutral-200 text-neutral-900 focus:outline-none focus:border-neutral-400 transition-colors"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="subject" className="block text-sm text-neutral-600 mb-2">
+            Betreff
+          </label>
+          <input
+            type="text"
+            id="subject"
+            value={formData.subject}
+            onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+            className="w-full px-4 py-3 bg-white border border-neutral-200 text-neutral-900 focus:outline-none focus:border-neutral-400 transition-colors"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label htmlFor="message" className="block text-sm text-neutral-600 mb-2">
+          Nachricht *
+        </label>
+        <textarea
+          id="message"
+          required
+          rows={5}
+          value={formData.message}
+          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+          className="w-full px-4 py-3 bg-white border border-neutral-200 text-neutral-900 focus:outline-none focus:border-neutral-400 transition-colors resize-none"
+        />
+      </div>
+
+      {submitStatus === 'success' && (
+        <div className="bg-neutral-900 text-white px-4 py-3 text-sm">
+          Vielen Dank! Ihre Nachricht wurde erfolgreich versendet.
+        </div>
+      )}
+
+      {submitStatus === 'error' && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 text-sm">
+          Fehler beim Senden der Nachricht. Bitte versuchen Sie es später erneut.
+        </div>
+      )}
+
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="w-full bg-neutral-900 text-white px-6 py-3 font-medium hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {isSubmitting ? 'Wird gesendet...' : 'Nachricht senden'}
+      </button>
+    </form>
+  );
+}
+
+function ContactFormFallback() {
+  return (
+    <div className="space-y-5">
+      <div className="grid md:grid-cols-2 gap-5">
+        <div className="h-[74px] bg-neutral-100 animate-pulse" />
+        <div className="h-[74px] bg-neutral-100 animate-pulse" />
+      </div>
+      <div className="grid md:grid-cols-2 gap-5">
+        <div className="h-[74px] bg-neutral-100 animate-pulse" />
+        <div className="h-[74px] bg-neutral-100 animate-pulse" />
+      </div>
+      <div className="h-[138px] bg-neutral-100 animate-pulse" />
+      <div className="h-[50px] bg-neutral-100 animate-pulse" />
+    </div>
+  );
+}
+
+export default function KontaktPage() {
+  return (
+    <main className="pt-28 pb-20 bg-white min-h-screen">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        {/* Header */}
+        <div className="max-w-3xl mb-16 md:mb-20">
+          <p className="text-neutral-500 text-sm tracking-[0.2em] uppercase mb-4">
+            Kontakt
+          </p>
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-neutral-900 mb-6">
+            <span className="text-primary">Wir sind für Sie da</span>
+          </h1>
+          <p className="text-neutral-600 text-lg leading-relaxed">
+            Haben Sie Fragen zu unseren Fahrzeugen oder Services? Vereinbaren Sie einen Termin
+            oder besuchen Sie uns direkt vor Ort in Goch.
+          </p>
+        </div>
+
+        {/* Main Content Grid */}
+        <div className="grid lg:grid-cols-2 gap-16 mb-20">
+          {/* Contact Information */}
+          <div>
+            <p className="text-xs text-neutral-500 uppercase tracking-wider mb-6">
+              Kontaktinformationen
+            </p>
+
+            <div className="space-y-8">
+              {/* Address */}
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-neutral-100 flex items-center justify-center flex-shrink-0">
+                  <MapPin className="w-5 h-5 text-neutral-600" strokeWidth={1.5} />
                 </div>
-
-                {/* Phone */}
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">Telefon</h3>
-                    
-                    <a  href={`tel:${CONTENT.phone.replace(/\s/g, '')}`}
-                      className="text-primary hover:underline"
-                    >
-                      {CONTENT.phone}
-                    </a>
-                  </div>
-                </div>
-
-                {/* Email */}
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Mail className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">E-Mail</h3>
-                    
-                      <a href={`mailto:${CONTENT.email}`}
-                      className="text-primary hover:underline"
-                    >
-                      {CONTENT.email}
-                    </a>
-                  </div>
-                </div>
-
-                {/* Opening Hours */}
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Clock className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">Öffnungszeiten</h3>
-                    <div className="space-y-1 text-sm text-gray-600">
-                      <p>
-                        <strong>Verkauf:</strong> Mo-Fr {CONTENT.hours.sales.weekdays}
-                      </p>
-                      <p>
-                        <strong>Service:</strong> Mo-Fr {CONTENT.hours.service.weekdays}
-                      </p>
-                      <p>
-                        <strong>Teile:</strong> Mo-Fr {CONTENT.hours.parts}
-                      </p>
-                    </div>
-                  </div>
+                <div>
+                  <p className="font-medium text-primary mb-1">Adresse</p>
+                  <p className="text-neutral-600 text-sm leading-relaxed">
+                    {CONTENT.address.street}<br />
+                    {CONTENT.address.city}<br />
+                    {CONTENT.address.country}
+                  </p>
                 </div>
               </div>
-            </motion.div>
 
-            {/* Contact Form */}
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <div className="bg-gray-50 rounded-xl p-6 md:p-8">
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
-                  Nachricht senden
-                </h2>
-
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                      Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      required
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                      E-Mail *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      required
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                      Telefon
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
-                      Betreff
-                    </label>
-                    <input
-                      type="text"
-                      id="subject"
-                      value={formData.subject}
-                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                      Nachricht *
-                    </label>
-                    <textarea
-                      id="message"
-                      required
-                      rows={5}
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
-                    />
-                  </div>
-
-                  {submitStatus === 'success' && (
-                    <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
-                      Vielen Dank! Ihre Nachricht wurde erfolgreich versendet.
-                    </div>
-                  )}
-
-                  {submitStatus === 'error' && (
-                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-                      Fehler beim Senden der Nachricht. Bitte versuchen Sie es später erneut.
-                    </div>
-                  )}
-
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              {/* Phone */}
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-neutral-100 flex items-center justify-center flex-shrink-0">
+                  <Phone className="w-5 h-5 text-neutral-600" strokeWidth={1.5} />
+                </div>
+                <div>
+                  <p className="font-medium text-primary mb-1">Telefon</p>
+                  <a
+                    href={`tel:${CONTENT.phone.replace(/\s/g, '')}`}
+                    className="text-neutral-600 text-sm hover:text-neutral-900 transition-colors"
                   >
-                    {isSubmitting ? 'Wird gesendet...' : 'Nachricht senden'}
-                  </button>
-                </form>
+                    {CONTENT.phone}
+                  </a>
+                </div>
               </div>
-            </motion.div>
+
+              {/* Email */}
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-neutral-100 flex items-center justify-center flex-shrink-0">
+                  <Mail className="w-5 h-5 text-neutral-600" strokeWidth={1.5} />
+                </div>
+                <div>
+                  <p className="font-medium text-primary mb-1">E-Mail</p>
+                  <a
+                    href={`mailto:${CONTENT.email}`}
+                    className="text-neutral-600 text-sm hover:text-neutral-900 transition-colors"
+                  >
+                    {CONTENT.email}
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Opening Hours */}
+            <div className="mt-12 pt-12 border-t border-neutral-200">
+              <p className="text-xs text-neutral-500 uppercase tracking-wider mb-6">
+                Öffnungszeiten
+              </p>
+              <div className="grid grid-cols-3 gap-6">
+                <div>
+                  <p className="text-sm text-primary font-medium mb-1">Verkauf</p>
+                  <p className="text-neutral-900 font-medium text-sm">{CONTENT.hours.sales.weekdays}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-primary font-medium mb-1">Service</p>
+                  <p className="text-neutral-900 font-medium text-sm">{CONTENT.hours.service.weekdays}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-primary font-medium mb-1">Teile</p>
+                  <p className="text-neutral-900 font-medium text-sm">{CONTENT.hours.parts}</p>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Google Maps with Consent */}
-          <motion.div
-            className="mt-12 md:mt-16"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 text-center">
-              So finden Sie uns
+          {/* Contact Form */}
+          <div className="bg-neutral-50 p-8 md:p-10">
+            <p className="text-xs text-neutral-500 uppercase tracking-wider mb-4">
+              Nachricht senden
+            </p>
+            <h2 className="text-2xl font-bold text-neutral-900 mb-8">
+              Schreiben Sie uns
             </h2>
-            <GoogleMapConsent />
-          </motion.div>
+
+            <Suspense fallback={<ContactFormFallback />}>
+              <ContactFormInner />
+            </Suspense>
+          </div>
         </div>
-      </section>
+
+        {/* Google Maps */}
+        <div>
+          <p className="text-xs text-neutral-500 uppercase tracking-wider mb-6">
+            Anfahrt
+          </p>
+          <GoogleMapConsent />
+        </div>
+      </div>
     </main>
   );
 }

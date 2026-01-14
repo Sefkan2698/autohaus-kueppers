@@ -23,7 +23,7 @@ export default function GoogleMapConsent() {
 
   if (isLoading) {
     return (
-      <div className="w-full h-[400px] md:h-[500px] bg-gray-100 rounded-xl animate-pulse" />
+      <div className="w-full h-[400px] md:h-[500px] bg-neutral-100 animate-pulse" />
     );
   }
 
@@ -31,36 +31,36 @@ export default function GoogleMapConsent() {
     return (
       <button
         onClick={handleConsent}
-        className="relative w-full h-[400px] md:h-[500px] bg-gray-300 rounded-xl overflow-hidden cursor-pointer hover:bg-gray-400 transition-colors group"
+        className="relative w-full h-[400px] md:h-[500px] bg-neutral-200 overflow-hidden cursor-pointer hover:bg-neutral-300 transition-colors group"
       >
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-1/4 left-1/4 w-32 h-32 border-2 border-gray-500 rounded-full" />
-          <div className="absolute bottom-1/3 right-1/3 w-24 h-24 border-2 border-gray-500 rounded-full" />
-        </div>
-
         {/* Content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-          <MapPin className="w-12 h-12 md:w-16 md:h-16 text-gray-600 mb-4 group-hover:text-gray-700 transition-colors" />
-          
-          <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-2">
+          <div className="w-12 h-12 bg-neutral-100 flex items-center justify-center mb-6">
+            <MapPin className="w-6 h-6 text-neutral-600" strokeWidth={1.5} />
+          </div>
+
+          <h3 className="text-lg font-semibold text-neutral-900 mb-2">
             Google Maps laden
           </h3>
-          
-          <p className="text-sm md:text-base text-gray-700 max-w-md leading-relaxed">
+
+          <p className="text-sm text-neutral-600 max-w-md leading-relaxed">
             Durch Klicken werden Daten an Google übermittelt.
             <br />
-            <span className="text-xs md:text-sm opacity-75">
+            <span className="text-xs text-neutral-500">
               Sie akzeptieren die Datenschutzbestimmungen von Google.
             </span>
           </p>
+
+          <span className="mt-6 px-6 py-2 bg-neutral-900 text-white text-sm font-medium group-hover:bg-neutral-800 transition-colors">
+            Karte anzeigen
+          </span>
         </div>
       </button>
     );
   }
 
   return (
-    <div className="w-full h-[400px] md:h-[500px] rounded-xl overflow-hidden shadow-lg">
+    <div className="w-full h-[400px] md:h-[500px] overflow-hidden">
       <iframe
         src={CONTENT.googleMapsEmbed}
         width="100%"

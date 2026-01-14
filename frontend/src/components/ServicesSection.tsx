@@ -3,86 +3,67 @@ import { Wrench, ClipboardCheck, Package } from 'lucide-react';
 const services = [
   {
     icon: Wrench,
-    title: 'Professionelle Werkstatt',
-    description: 'Moderne Hebebühnen und Diagnosegeräte für alle Reparaturen',
-    features: [
-      'Meisterbetrieb seit über 30 Jahren',
-      'Modernste Werkstattausstattung',
-      'Schnelle Terminvergabe',
-      'Faire und transparente Preise',
-    ],
+    title: 'Werkstatt',
+    description: 'Moderne Hebebühnen und Diagnosegeräte für alle Reparaturen. Meisterbetrieb mit über 30 Jahren Erfahrung.',
   },
   {
     icon: ClipboardCheck,
     title: 'Service & Inspektion',
-    description: 'Regelmäßige Wartung hält Ihr Fahrzeug in Bestform',
-    features: [
-      'HU/AU direkt vor Ort',
-      'Citroën Servicepläne',
-      'Kostenlose Fahrzeugchecks',
-      'Erinnerungsservice per E-Mail',
-    ],
+    description: 'HU/AU direkt vor Ort. Regelmäßige Wartung nach Citroën Serviceplänen hält Ihr Fahrzeug in Bestform.',
   },
   {
     icon: Package,
-    title: 'Original Ersatzteile',
-    description: 'Nur beste Qualität für maximale Sicherheit und Langlebigkeit',
-    features: [
-      'Citroën Originalteile',
-      'Schnelle Bestellabwicklung',
-      'Herstellergarantie inklusive',
-      'Kompetente Beratung',
-    ],
+    title: 'Originalteile',
+    description: 'Citroën Originalteile mit Herstellergarantie. Schnelle Bestellabwicklung und kompetente Beratung.',
   },
 ];
 
 export default function ServicesSection() {
   return (
-    <section className="py-16 md:py-24 bg-white">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section className="relative py-24 md:py-32 overflow-hidden">
+      {/* Diagonaler Hintergrund */}
+      <div className="absolute inset-0 bg-white" />
+      <div
+        className="absolute inset-0 bg-neutral-100"
+        style={{
+          clipPath: 'polygon(0 0, 100% 0, 100% 65%, 0 85%)',
+        }}
+      />
+
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Unsere Leistungen
-          </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Von der Inspektion bis zur Reparatur – wir sind Ihr zuverlässiger Partner
+        <div className="mb-16 md:mb-20">
+          <p className="text-neutral-500 text-sm tracking-[0.2em] uppercase mb-4">
+            Leistungen
           </p>
+          <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 max-w-lg">
+            <span className="text-primary">Alles aus einer Hand</span>
+          </h2>
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16">
           {services.map((service, index) => {
             const Icon = service.icon;
             return (
-              <div
-                key={index}
-                className="bg-gray-50 rounded-lg p-6 md:p-8 hover:shadow-lg transition-shadow"
-              >
+              <div key={index} className="group">
                 {/* Icon */}
-                <div className="w-16 h-16 bg-primary rounded-lg flex items-center justify-center mb-6">
-                  <Icon className="w-8 h-8 text-white" />
+                <div className="mb-6">
+                  <Icon
+                    className="w-6 h-6 text-neutral-400 group-hover:text-primary transition-colors duration-300"
+                    strokeWidth={1.5}
+                  />
                 </div>
 
                 {/* Title */}
-                <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">
+                <h3 className="text-lg font-semibold text-primary mb-3">
                   {service.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-gray-600 mb-6">
+                <p className="text-neutral-600 text-sm leading-relaxed">
                   {service.description}
                 </p>
-
-                {/* Features List */}
-                <ul className="space-y-2">
-                  {service.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-gray-700">
-                      <span className="text-primary mt-1">✓</span>
-                      <span className="text-sm">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
               </div>
             );
           })}

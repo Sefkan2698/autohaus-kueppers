@@ -1,7 +1,6 @@
 import HeroSection from '@/components/HeroSection';
 import ServicesSection from '@/components/ServicesSection';
 import TrustSection from '@/components/TrustSection';
-import SustainabilitySection from '@/components/SustainabilitySection';
 import InfoBanner from '@/components/InfoBanner';
 
 export default function Home() {
@@ -11,7 +10,6 @@ export default function Home() {
       <HeroSection />
       <ServicesSection />
       <TrustSection />
-      <SustainabilitySection />
     </main>
   );
 }

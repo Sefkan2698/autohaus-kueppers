@@ -1,9 +1,13 @@
 // API Configuration
 // In production: Use empty string (paths already start with /api, Nginx routes to backend)
 // In development: Use full URL http://localhost:3001
-export const API_URL = typeof window === 'undefined'
-  ? (process.env.NEXT_PUBLIC_API_URL ?? '')
-  : (process.env.NEXT_PUBLIC_API_URL ?? (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3001'));
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
+// Debug: Zeige API_URL beim Start
+if (typeof window !== 'undefined') {
+  console.log('🔧 API_URL:', API_URL);
+  console.log('🔧 NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
+}
 
 export const CONTENT = {
   phone: '+49 2823 3143',

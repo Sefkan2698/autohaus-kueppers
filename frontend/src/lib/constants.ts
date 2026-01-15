@@ -1,7 +1,7 @@
 // API Configuration
 // In production: Use empty string (paths already start with /api, Nginx routes to backend)
 // In development: Use full URL http://localhost:3001
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? '';
 
 // Debug: Zeige API_URL beim Start
 if (typeof window !== 'undefined') {

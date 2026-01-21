@@ -10,6 +10,7 @@ import {
   Image as ImageIcon,
   LogOut,
   LayoutDashboard,
+  Users,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -66,6 +67,13 @@ export default function AdminDashboardPage() {
       icon: ImageIcon,
       href: '/admin/dashboard/carousel',
       color: 'bg-purple-500',
+    },
+    {
+      title: 'Mitarbeiter',
+      description: 'Team-Mitglieder verwalten',
+      icon: Users,
+      href: '/admin/dashboard/mitarbeiter',
+      color: 'bg-orange-500',
     },
   ];
 

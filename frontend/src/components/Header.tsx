@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Menu, X, Phone } from 'lucide-react';
 
 export default function Header() {
@@ -41,14 +40,10 @@ export default function Header() {
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <Image
-              src="/images/logo.svg"
+            <img
+              src="/logo.svg"
               alt="Autohaus Küppers"
-              width={160}
-              height={40}
-              style={{ height: 'auto' }}
-              className={`transition-all duration-300 ${isTransparent ? 'brightness-0 invert' : ''}`}
-              priority
+              className={`h-16 w-auto transition-all duration-300 ${isTransparent ? 'brightness-0 invert' : ''}`}
             />
           </Link>
 

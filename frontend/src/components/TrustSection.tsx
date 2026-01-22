@@ -42,7 +42,7 @@ export default function TrustSection() {
             Vertrauen
           </p>
           <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 max-w-lg">
-            Warum uns Kunden vertrauen
+            Warum uns Kunden <span className="text-primary">vertrauen</span>
           </h2>
         </div>
 

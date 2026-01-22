@@ -6,6 +6,30 @@ import { MapPin, Phone, Mail } from 'lucide-react';
 import { CONTENT, API_URL } from '@/lib/constants';
 import GoogleMapConsent from '@/components/GoogleMapConsent';
 
+// Betreff-Optionen
+const SUBJECT_OPTIONS = [
+  { value: '', label: 'Bitte wählen...' },
+  { value: 'Kaufanfrage', label: 'Kaufanfrage' },
+  { value: 'Probefahrt', label: 'Probefahrt vereinbaren' },
+  { value: 'Service', label: 'Service & Werkstatt' },
+  { value: 'Finanzierung', label: 'Finanzierung & Leasing' },
+  { value: 'Sonstiges', label: 'Sonstiges' },
+];
+
+// Service-Optionen
+const SERVICE_OPTIONS = [
+  { value: '', label: 'Bitte wählen...' },
+  { value: 'Kleine Inspektion', label: 'Kleine Inspektion' },
+  { value: 'Große Inspektion', label: 'Große Inspektion' },
+  { value: 'Ölwechsel', label: 'Ölwechsel' },
+  { value: 'Reifenwechsel', label: 'Reifenwechsel / Einlagerung' },
+  { value: 'HU/AU', label: 'HU/AU (TÜV)' },
+  { value: 'Klimaanlagen-Service', label: 'Klimaanlagen-Service' },
+  { value: 'Bremsen-Service', label: 'Bremsen-Service' },
+  { value: 'Reparatur', label: 'Reparatur' },
+  { value: 'Sonstiger Service', label: 'Sonstiger Service' },
+];
+
 function ContactFormInner() {
   const searchParams = useSearchParams();
 
@@ -14,11 +38,15 @@ function ContactFormInner() {
     email: '',
     phone: '',
     message: '',
-    subject: '',
+    subjectCategory: '',
+    serviceType: '',
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  // Check if service type is required
+  const isServiceSelected = formData.subjectCategory === 'Service';
 
   useEffect(() => {
     const betreff = searchParams.get('betreff');
@@ -26,26 +54,69 @@ function ContactFormInner() {
     const job = searchParams.get('job');
 
     if (betreff) {
-      setFormData(prev => ({ ...prev, subject: betreff }));
+      // Try to match to a category
+      const matchedCategory = SUBJECT_OPTIONS.find(opt =>
+        opt.value.toLowerCase() === betreff.toLowerCase()
+      );
+      if (matchedCategory) {
+        setFormData(prev => ({ ...prev, subjectCategory: matchedCategory.value }));
+      } else {
+        setFormData(prev => ({ ...prev, subjectCategory: 'Sonstiges' }));
+      }
     } else if (fahrzeug) {
-      setFormData(prev => ({ ...prev, subject: `Anfrage: ${fahrzeug}` }));
+      setFormData(prev => ({
+        ...prev,
+        subjectCategory: 'Kaufanfrage',
+        message: `Anfrage zu: ${fahrzeug}\n\n`
+      }));
     } else if (job) {
-      setFormData(prev => ({ ...prev, subject: `Bewerbung: ${job}` }));
+      setFormData(prev => ({
+        ...prev,
+        subjectCategory: 'Sonstiges',
+        message: `Bewerbung für: ${job}\n\n`
+      }));
     }
   }, [searchParams]);
 
+  // Build the final subject line
+  const buildSubject = () => {
+    if (formData.subjectCategory === 'Service' && formData.serviceType) {
+      return `Service - ${formData.serviceType}`;
+    }
+    return formData.subjectCategory || 'Kontaktanfrage';
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validation
+    if (isServiceSelected && !formData.serviceType) {
+      alert('Bitte wählen Sie eine Service-Art aus.');
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
     try {
+      // Build the message with service type at the top if applicable
+      let finalMessage = formData.message;
+      if (isServiceSelected && formData.serviceType) {
+        finalMessage = `Gewünschter Service: ${formData.serviceType}\n\n${formData.message}`;
+      }
+
       const response = await fetch(`${API_URL}/api/contact/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          subject: buildSubject(),
+          message: finalMessage,
+        }),
       });
 
       if (!response.ok) {
@@ -53,7 +124,7 @@ function ContactFormInner() {
       }
 
       setSubmitStatus('success');
-      setFormData({ name: '', email: '', phone: '', message: '', subject: '' });
+      setFormData({ name: '', email: '', phone: '', message: '', subjectCategory: '', serviceType: '' });
     } catch (error) {
       console.error('Fehler beim Senden:', error);
       setSubmitStatus('error');
@@ -110,17 +181,45 @@ function ContactFormInner() {
 
         <div>
           <label htmlFor="subject" className="block text-sm text-neutral-600 mb-2">
-            Betreff
+            Betreff *
           </label>
-          <input
-            type="text"
+          <select
             id="subject"
-            value={formData.subject}
-            onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+            required
+            value={formData.subjectCategory}
+            onChange={(e) => setFormData({ ...formData, subjectCategory: e.target.value, serviceType: '' })}
             className="w-full px-4 py-3 bg-white border border-neutral-200 text-neutral-900 focus:outline-none focus:border-neutral-400 transition-colors"
-          />
+          >
+            {SUBJECT_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
+
+      {/* Service-Art Dropdown - nur sichtbar wenn "Service" ausgewählt */}
+      {isServiceSelected && (
+        <div>
+          <label htmlFor="serviceType" className="block text-sm text-neutral-600 mb-2">
+            Service-Art *
+          </label>
+          <select
+            id="serviceType"
+            required
+            value={formData.serviceType}
+            onChange={(e) => setFormData({ ...formData, serviceType: e.target.value })}
+            className="w-full px-4 py-3 bg-white border border-neutral-200 text-neutral-900 focus:outline-none focus:border-neutral-400 transition-colors"
+          >
+            {SERVICE_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div>
         <label htmlFor="message" className="block text-sm text-neutral-600 mb-2">

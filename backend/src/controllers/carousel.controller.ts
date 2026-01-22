@@ -48,12 +48,13 @@ export class CarouselController {
       const url = `/uploads/${filename}`;
 
       // Carousel-Eintrag erstellen
-      const { alt, title, subtitle, link, order, isActive } = req.body;
+      const { alt, title, subtitle, textPosition, link, order, isActive } = req.body;
       const image = await carouselService.create({
         url,
         alt,
         title,
         subtitle,
+        textPosition: textPosition || 'bottom-left',
         link,
         order: order ? parseInt(order) : undefined,
         isActive: isActive === 'true' || isActive === true,
@@ -70,9 +71,24 @@ export class CarouselController {
   async update(req: express.Request, res: express.Response) {
     try {
       const { id } = req.params;
-      const image = await carouselService.update(id, req.body);
+
+      // Extract only allowed fields
+      const { url, alt, title, subtitle, textPosition, link, order, isActive } = req.body;
+      const updateData: Record<string, unknown> = {};
+
+      if (url !== undefined) updateData.url = url;
+      if (alt !== undefined) updateData.alt = alt;
+      if (title !== undefined) updateData.title = title;
+      if (subtitle !== undefined) updateData.subtitle = subtitle;
+      if (textPosition !== undefined) updateData.textPosition = textPosition;
+      if (link !== undefined) updateData.link = link;
+      if (order !== undefined) updateData.order = order;
+      if (isActive !== undefined) updateData.isActive = isActive;
+
+      const image = await carouselService.update(id, updateData);
       res.json(image);
     } catch (error) {
+      console.error('Error updating carousel:', error);
       res.status(400).json({ error: 'Fehler beim Aktualisieren des Bildes' });
     }
   }

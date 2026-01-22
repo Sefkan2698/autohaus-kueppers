@@ -24,6 +24,7 @@ export class CarouselService {
     alt?: string;
     title?: string;
     subtitle?: string;
+    textPosition?: string;
     link?: string;
     order?: number;
     isActive?: boolean;
@@ -39,6 +40,7 @@ export class CarouselService {
     alt?: string;
     title?: string;
     subtitle?: string;
+    textPosition?: string;
     link?: string;
     order?: number;
     isActive?: boolean;

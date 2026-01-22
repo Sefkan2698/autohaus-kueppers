@@ -12,8 +12,33 @@ interface CarouselImage {
   alt?: string;
   title?: string;
   subtitle?: string;
+  textPosition?: string;
+  link?: string;
   order: number;
 }
+
+// Helper function to get position classes
+const getPositionClasses = (position: string = 'bottom-left') => {
+  const positions: Record<string, string> = {
+    'top-left': 'top-24 left-6 lg:left-8',
+    'top-center': 'top-24 left-1/2 -translate-x-1/2',
+    'top-right': 'top-24 right-6 lg:right-8',
+    'middle-left': 'top-1/2 -translate-y-1/2 left-6 lg:left-8',
+    'middle-center': 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
+    'middle-right': 'top-1/2 -translate-y-1/2 right-6 lg:right-8',
+    'bottom-left': 'bottom-20 left-6 lg:left-8',
+    'bottom-center': 'bottom-20 left-1/2 -translate-x-1/2',
+    'bottom-right': 'bottom-20 right-6 lg:right-8',
+  };
+  return positions[position] || positions['bottom-left'];
+};
+
+// Helper function to get text alignment based on position
+const getTextAlignment = (position: string = 'bottom-left') => {
+  if (position.includes('center')) return 'text-center items-center';
+  if (position.includes('right')) return 'text-right items-end';
+  return 'text-left items-start';
+};
 
 export default function HeroSection() {
   const [images, setImages] = useState<CarouselImage[]>([]);
@@ -87,45 +112,82 @@ export default function HeroSection() {
         <div className="absolute inset-0 bg-neutral-800" />
       )}
 
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
+      {/* Subtle Gradient Overlay for better readability */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20" />
 
-      {/* Content */}
-      <div className="relative h-full max-w-7xl mx-auto px-6 lg:px-8 flex flex-col justify-center">
-        <div className="max-w-xl">
-          {/* Tagline */}
-          <p className="text-white/80 text-sm tracking-[0.2em] uppercase mb-4">
+      {/* Citroën Badge - Top Right */}
+      <div className="absolute top-24 right-6 lg:right-8 z-10">
+        <div className="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded">
+          <p className="text-white text-sm font-medium tracking-wide">
             Citroën Vertragshändler
           </p>
-
-          {/* Main Headline */}
-          <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-            Autohaus Küppers
-          </h1>
-
-          {/* Subtitle */}
-          <p className="text-white/90 text-lg md:text-xl leading-relaxed mb-10">
-            Qualität und Service seit über 30 Jahren.
-            Ihr Partner für Neuwagen, Vorführwagen und Gebrauchtwagen in Goch.
-          </p>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Link
-              href="/fahrzeuge"
-              className="inline-flex items-center justify-center bg-primary text-white px-8 py-4 text-base font-medium hover:bg-primary-dark transition-colors"
-            >
-              Fahrzeuge entdecken
-            </Link>
-            <Link
-              href="/kontakt"
-              className="inline-flex items-center justify-center border border-white/40 text-white px-8 py-4 text-base font-medium hover:bg-white/10 transition-colors"
-            >
-              Kontakt aufnehmen
-            </Link>
-          </div>
         </div>
       </div>
+
+      {/* Content Box - Dynamic Position with Blur */}
+      {images.length > 0 && images[currentIndex] ? (
+        <div
+          className={`absolute z-10 w-[calc(100%-3rem)] sm:w-auto max-w-xl ${getPositionClasses(images[currentIndex].textPosition)}`}
+        >
+          <div className={`bg-black/30 backdrop-blur-md border border-white/10 p-5 md:p-7 rounded-lg flex flex-col ${getTextAlignment(images[currentIndex].textPosition)}`}>
+            {/* Title */}
+            {images[currentIndex].title && (
+              <h1 className="text-white text-xl md:text-2xl lg:text-3xl font-bold leading-tight mb-2">
+                {images[currentIndex].title}
+              </h1>
+            )}
+
+            {/* Subtitle */}
+            {images[currentIndex].subtitle && (
+              <p className="text-white/90 text-sm md:text-base leading-relaxed mb-5">
+                {images[currentIndex].subtitle}
+              </p>
+            )}
+
+            {/* CTA Buttons */}
+            <div className={`flex flex-col sm:flex-row gap-3 ${images[currentIndex].textPosition?.includes('center') ? 'justify-center' : images[currentIndex].textPosition?.includes('right') ? 'justify-end' : 'justify-start'}`}>
+              <Link
+                href="/fahrzeuge"
+                className="inline-flex items-center justify-center bg-primary text-white px-5 py-2.5 text-sm font-medium hover:bg-primary-dark transition-colors rounded"
+              >
+                Fahrzeuge entdecken
+              </Link>
+              <Link
+                href="/kontakt"
+                className="inline-flex items-center justify-center bg-white/10 backdrop-blur-sm border border-white/30 text-white px-5 py-2.5 text-sm font-medium hover:bg-white/20 transition-colors rounded"
+              >
+                Kontakt aufnehmen
+              </Link>
+            </div>
+          </div>
+        </div>
+      ) : (
+        /* Fallback wenn keine Bilder vorhanden */
+        <div className="absolute bottom-20 left-6 lg:left-8 z-10 max-w-xl">
+          <div className="bg-black/30 backdrop-blur-md border border-white/10 p-5 md:p-7 rounded-lg">
+            <h1 className="text-white text-xl md:text-2xl lg:text-3xl font-bold leading-tight mb-2">
+              Autohaus Küppers
+            </h1>
+            <p className="text-white/90 text-sm md:text-base leading-relaxed mb-5">
+              Qualität und Service seit über 30 Jahren. Ihr Partner für Neuwagen, Vorführwagen und Gebrauchtwagen in Goch.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/fahrzeuge"
+                className="inline-flex items-center justify-center bg-primary text-white px-5 py-2.5 text-sm font-medium hover:bg-primary-dark transition-colors rounded"
+              >
+                Fahrzeuge entdecken
+              </Link>
+              <Link
+                href="/kontakt"
+                className="inline-flex items-center justify-center bg-white/10 backdrop-blur-sm border border-white/30 text-white px-5 py-2.5 text-sm font-medium hover:bg-white/20 transition-colors rounded"
+              >
+                Kontakt aufnehmen
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Navigation Arrows */}
       {images.length > 1 && (

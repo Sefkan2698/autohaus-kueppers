@@ -42,44 +42,55 @@ export default function TeamSection() {
   }
 
   return (
-    <section className="relative py-24 md:py-32 overflow-hidden bg-white">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+    <section className="relative py-24 md:py-32 overflow-hidden">
+      {/* Diagonaler Hintergrund - von unten links nach oben rechts */}
+      <div className="absolute inset-0 bg-white" />
+      <div
+        className="absolute inset-0 bg-neutral-100"
+        style={{
+          clipPath: 'polygon(0 65%, 100% 35%, 100% 100%, 0 100%)',
+        }}
+      />
+
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
         {/* Section Header */}
         <div className="mb-16 md:mb-20">
           <p className="text-neutral-500 text-sm tracking-[0.2em] uppercase mb-4">
             Team
           </p>
           <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 max-w-lg">
-            <span className="text-primary">Unser Team</span>
+            Die Menschen hinter <span className="text-primary">Küppers</span>
           </h2>
         </div>
 
-        {/* Team Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 md:gap-10">
-          {members.map((member) => (
-            <div key={member.id} className="group text-center">
-              {/* Image Container */}
-              <div className="relative w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden bg-neutral-100">
-                <Image
-                  src={member.url.startsWith('http') ? member.url : `${API_URL}${member.url}`}
-                  alt={member.alt || member.name}
-                  fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
-                  unoptimized
-                />
+        {/* Team Horizontal Scroll */}
+        <div className="overflow-x-auto pb-4 -mx-6 px-6 lg:-mx-8 lg:px-8 scrollbar-thin scrollbar-thumb-neutral-300 scrollbar-track-transparent">
+          <div className="flex gap-8 md:gap-12">
+            {members.map((member) => (
+              <div key={member.id} className="group text-center flex-shrink-0">
+                {/* Image Container - Rund */}
+                <div className="relative w-36 h-36 md:w-44 md:h-44 mx-auto mb-5 rounded-full overflow-hidden bg-neutral-200 shadow-lg">
+                  <Image
+                    src={member.url.startsWith('http') ? member.url : `${API_URL}${member.url}`}
+                    alt={member.alt || member.name}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    unoptimized
+                  />
+                </div>
+
+                {/* Name */}
+                <h3 className="text-base font-semibold text-neutral-900 mb-1">
+                  {member.name}
+                </h3>
+
+                {/* Title */}
+                <p className="text-sm text-neutral-500 whitespace-nowrap">
+                  {member.title}
+                </p>
               </div>
-
-              {/* Name */}
-              <h3 className="text-lg font-semibold text-neutral-900 mb-1">
-                {member.name}
-              </h3>
-
-              {/* Title */}
-              <p className="text-sm text-neutral-600">
-                {member.title}
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

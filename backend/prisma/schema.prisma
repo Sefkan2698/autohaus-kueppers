@@ -131,16 +131,17 @@ enum BannerType {
 
 // Carousel-Bilder für Startseite
 model CarouselImage {
-  id        String   @id @default(uuid())
-  url       String   // Bild-URL oder Pfad
-  alt       String?  // Alt-Text für SEO
-  title     String?  // Optionaler Titel im Slider
-  subtitle  String?  // Optionaler Untertitel
-  link      String?  // Optional: Link bei Klick
-  order     Int      @default(0) // Sortierung
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(uuid())
+  url          String   // Bild-URL oder Pfad
+  alt          String?  // Alt-Text für SEO
+  title        String?  // Optionaler Titel im Slider
+  subtitle     String?  // Optionaler Untertitel
+  textPosition String   @default("bottom-left") // Position der Text-Box: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right
+  link         String?  // Optional: Link bei Klick
+  order        Int      @default(0) // Sortierung
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   @@index([isActive, order])
   @@map("carousel_images")

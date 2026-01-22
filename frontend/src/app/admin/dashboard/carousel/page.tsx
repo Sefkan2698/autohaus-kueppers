@@ -36,19 +36,67 @@ interface CarouselImage {
   id: string;
   url: string;
   alt?: string;
+  title?: string;
+  subtitle?: string;
+  textPosition: string;
   order: number;
   isActive: boolean;
+}
+
+const POSITION_OPTIONS = [
+  { value: 'top-left', label: 'Oben Links' },
+  { value: 'top-center', label: 'Oben Mitte' },
+  { value: 'top-right', label: 'Oben Rechts' },
+  { value: 'middle-left', label: 'Mitte Links' },
+  { value: 'middle-center', label: 'Mitte' },
+  { value: 'middle-right', label: 'Mitte Rechts' },
+  { value: 'bottom-left', label: 'Unten Links' },
+  { value: 'bottom-center', label: 'Unten Mitte' },
+  { value: 'bottom-right', label: 'Unten Rechts' },
+] as const;
+
+// 3x3 Grid Position Picker Component
+function PositionPicker({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (position: string) => void;
+}) {
+  const positions = [
+    ['top-left', 'top-center', 'top-right'],
+    ['middle-left', 'middle-center', 'middle-right'],
+    ['bottom-left', 'bottom-center', 'bottom-right'],
+  ];
+
+  return (
+    <div className="grid grid-cols-3 gap-1 w-32 h-20 bg-gray-200 rounded p-1">
+      {positions.flat().map((pos) => (
+        <button
+          key={pos}
+          type="button"
+          onClick={() => onChange(pos)}
+          className={`rounded transition-colors ${
+            value === pos
+              ? 'bg-primary'
+              : 'bg-gray-100 hover:bg-gray-300'
+          }`}
+          title={POSITION_OPTIONS.find((p) => p.value === pos)?.label}
+        />
+      ))}
+    </div>
+  );
 }
 
 // Sortable Image Item Component
 function SortableImageItem({
   image,
   onDelete,
-  onUpdateAlt,
+  onUpdate,
 }: {
   image: CarouselImage;
   onDelete: (id: string) => void;
-  onUpdateAlt: (id: string, alt: string) => void;
+  onUpdate: (id: string, data: Partial<CarouselImage>) => void;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: image.id,
@@ -60,85 +108,160 @@ function SortableImageItem({
     opacity: isDragging ? 0.5 : 1,
   };
 
-  const [editingAlt, setEditingAlt] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [title, setTitle] = useState(image.title || '');
+  const [subtitle, setSubtitle] = useState(image.subtitle || '');
   const [altText, setAltText] = useState(image.alt || '');
+  const [textPosition, setTextPosition] = useState(image.textPosition || 'bottom-left');
 
-  const handleSaveAlt = () => {
-    onUpdateAlt(image.id, altText);
-    setEditingAlt(false);
+  const handleSave = () => {
+    onUpdate(image.id, { title, subtitle, alt: altText, textPosition });
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setTitle(image.title || '');
+    setSubtitle(image.subtitle || '');
+    setAltText(image.alt || '');
+    setTextPosition(image.textPosition || 'bottom-left');
+    setIsEditing(false);
   };
 
   return (
-    <div ref={setNodeRef} style={style} className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
-      <div className="flex items-start gap-4">
-        {/* Drag Handle */}
-        <button
-          {...attributes}
-          {...listeners}
-          className="mt-2 p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-grab active:cursor-grabbing touch-none"
-          style={{ touchAction: 'none' }}
-        >
-          <GripVertical className="w-5 h-5 text-gray-400" />
-        </button>
+    <div ref={setNodeRef} style={style} className="bg-white rounded-xl p-3 sm:p-4 shadow-sm border border-gray-200">
+      {/* Mobile: Stack layout, Desktop: Flex layout */}
+      <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
+        {/* Top row on mobile: Drag handle + Image + Delete */}
+        <div className="flex items-start gap-3">
+          {/* Drag Handle */}
+          <button
+            {...attributes}
+            {...listeners}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-grab active:cursor-grabbing touch-none flex-shrink-0"
+            style={{ touchAction: 'none' }}
+          >
+            <GripVertical className="w-5 h-5 text-gray-400" />
+          </button>
 
-        {/* Image Preview */}
-        <div className="relative w-32 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-          <Image
-            src={image.url.startsWith('http') ? image.url : `${API_URL}${image.url}`}
-            alt={image.alt || 'Carousel Bild'}
-            fill
-            className="object-cover"
-            unoptimized
-          />
+          {/* Image Preview */}
+          <div className="relative w-24 h-16 sm:w-32 sm:h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+            <Image
+              src={image.url.startsWith('http') ? image.url : `${API_URL}${image.url}`}
+              alt={image.alt || 'Carousel Bild'}
+              fill
+              className="object-cover"
+              unoptimized
+            />
+          </div>
+
+          {/* Position badge (mobile only) */}
+          <div className="flex-1 sm:hidden">
+            <span className="text-xs text-gray-500">Pos. {image.order}</span>
+          </div>
+
+          {/* Delete button */}
+          <button
+            onClick={() => onDelete(image.id)}
+            className="p-2 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
+            title="Löschen"
+          >
+            <Trash2 className="w-4 h-4 text-red-600" />
+          </button>
         </div>
 
         {/* Info & Actions */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-2 mb-2">
+          {/* Desktop position badge */}
+          <div className="hidden sm:flex items-center justify-between mb-2">
             <span className="text-sm font-medium text-gray-900">Position: {image.order}</span>
-            <button
-              onClick={() => onDelete(image.id)}
-              className="p-2 hover:bg-red-50 rounded-lg transition-colors"
-              title="Löschen"
-            >
-              <Trash2 className="w-4 h-4 text-red-600" />
-            </button>
           </div>
 
-          {/* Alt Text */}
-          {editingAlt ? (
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={altText}
-                onChange={(e) => setAltText(e.target.value)}
-                placeholder="Alt-Text (optional)"
-                className="flex-1 px-3 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                autoFocus
-              />
-              <button
-                onClick={handleSaveAlt}
-                className="px-3 py-1 bg-primary text-white text-sm rounded-lg hover:bg-primary-dark"
-              >
-                Speichern
-              </button>
-              <button
-                onClick={() => {
-                  setAltText(image.alt || '');
-                  setEditingAlt(false);
-                }}
-                className="px-3 py-1 border border-gray-300 text-sm rounded-lg hover:bg-gray-50"
-              >
-                Abbrechen
-              </button>
+          {isEditing ? (
+            <div className="space-y-3">
+              {/* Text fields */}
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Titel</label>
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="z.B. Autohaus Küppers"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Untertitel</label>
+                  <textarea
+                    value={subtitle}
+                    onChange={(e) => setSubtitle(e.target.value)}
+                    placeholder="z.B. Qualität und Service..."
+                    rows={2}
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Alt-Text (SEO)</label>
+                  <input
+                    type="text"
+                    value={altText}
+                    onChange={(e) => setAltText(e.target.value)}
+                    placeholder="Bildbeschreibung"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  />
+                </div>
+              </div>
+
+              {/* Position Picker */}
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-2">Text-Position</label>
+                <div className="flex items-center gap-3">
+                  <PositionPicker value={textPosition} onChange={setTextPosition} />
+                  <span className="text-xs text-gray-500">
+                    {POSITION_OPTIONS.find((p) => p.value === textPosition)?.label}
+                  </span>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex gap-2 pt-1">
+                <button
+                  onClick={handleSave}
+                  className="flex-1 sm:flex-none px-4 py-2 bg-primary text-white text-sm rounded-lg hover:bg-primary-dark"
+                >
+                  Speichern
+                </button>
+                <button
+                  onClick={handleCancel}
+                  className="flex-1 sm:flex-none px-4 py-2 border border-gray-300 text-sm rounded-lg hover:bg-gray-50"
+                >
+                  Abbrechen
+                </button>
+              </div>
             </div>
           ) : (
-            <button
-              onClick={() => setEditingAlt(true)}
-              className="text-sm text-gray-600 hover:text-primary"
-            >
-              {image.alt ? `Alt-Text: ${image.alt}` : 'Alt-Text hinzufügen'}
-            </button>
+            <div className="space-y-2">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4">
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-900 truncate">
+                    {image.title || <span className="text-gray-400 italic">Kein Titel</span>}
+                  </p>
+                  <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">
+                    {image.subtitle || <span className="text-gray-400 italic">Kein Untertitel</span>}
+                  </p>
+                </div>
+                {/* Position picker - hidden on very small screens when not editing */}
+                <div className="hidden sm:block flex-shrink-0">
+                  <PositionPicker value={image.textPosition || 'bottom-left'} onChange={(pos) => onUpdate(image.id, { textPosition: pos })} />
+                </div>
+              </div>
+              <button
+                onClick={() => setIsEditing(true)}
+                className="text-sm text-primary hover:text-primary-dark font-medium"
+              >
+                Bearbeiten
+              </button>
+            </div>
           )}
         </div>
       </div>
@@ -259,11 +382,23 @@ export default function AdminCarouselPage() {
     }
   };
 
-  const handleUpdateAlt = async (id: string, alt: string) => {
+  const handleUpdate = async (id: string, data: Partial<CarouselImage>) => {
     try {
       const token = localStorage.getItem('adminToken');
       const image = images.find((img) => img.id === id);
       if (!image) return;
+
+      // Only send allowed fields (exclude id, createdAt, updatedAt)
+      const updateData = {
+        url: image.url,
+        alt: image.alt,
+        title: image.title,
+        subtitle: image.subtitle,
+        textPosition: image.textPosition,
+        order: image.order,
+        isActive: image.isActive,
+        ...data,
+      };
 
       const response = await fetch(`${API_URL}/api/carousel/${id}`, {
         method: 'PUT',
@@ -271,17 +406,21 @@ export default function AdminCarouselPage() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          ...image,
-          alt,
-        }),
+        body: JSON.stringify(updateData),
       });
 
       if (response.ok) {
+        setSuccessMessage('Änderungen gespeichert');
         fetchImages();
+        setTimeout(() => setSuccessMessage(''), 3000);
+      } else {
+        const errorData = await response.json();
+        console.error('Update error:', errorData);
+        setError('Fehler beim Speichern');
       }
     } catch (error) {
-      console.error('Error updating alt text:', error);
+      console.error('Error updating carousel image:', error);
+      setError('Fehler beim Speichern');
     }
   };
 
@@ -396,7 +535,8 @@ export default function AdminCarouselPage() {
               <ul className="space-y-1 list-disc list-inside">
                 <li>Laden Sie Bilder hoch - sie werden automatisch am Ende hinzugefügt</li>
                 <li>Ziehen Sie die Bilder mit dem Griff-Symbol, um die Reihenfolge zu ändern</li>
-                <li>Das erste Bild wird als erstes im Carousel angezeigt</li>
+                <li><strong>Titel & Untertitel</strong> werden pro Bild in einer Box auf der Startseite angezeigt</li>
+                <li>Ohne Titel/Untertitel wird ein Standard-Text angezeigt</li>
               </ul>
             </div>
           </div>
@@ -433,7 +573,7 @@ export default function AdminCarouselPage() {
                     key={image.id}
                     image={image}
                     onDelete={handleDelete}
-                    onUpdateAlt={handleUpdateAlt}
+                    onUpdate={handleUpdate}
                   />
                 ))}
               </SortableContext>

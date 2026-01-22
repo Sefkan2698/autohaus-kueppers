@@ -10,8 +10,8 @@ export default function Home() {
       <InfoBanner />
       <HeroSection />
       <ServicesSection />
-      <TeamSection />
       <TrustSection />
+      <TeamSection />
     </main>
   );
 }

@@ -188,7 +188,7 @@ export default function FahrzeugDetailPage() {
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
                     className={`relative aspect-square overflow-hidden transition-opacity ${
-                      currentImageIndex === index ? 'ring-2 ring-neutral-900' : 'opacity-60 hover:opacity-100'
+                      currentImageIndex === index ? 'ring-2 ring-primary' : 'opacity-60 hover:opacity-100'
                     }`}
                   >
                     <Image

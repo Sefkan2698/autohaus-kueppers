@@ -146,7 +146,7 @@ export default function JobDetailPage() {
                 </p>
                 <ul className="space-y-3">
                   {job.benefits.map((benefit, idx) => (
-                    <li key={idx} className="text-neutral-600 text-sm leading-relaxed pl-4 border-l-2 border-neutral-900">
+                    <li key={idx} className="text-neutral-600 text-sm leading-relaxed pl-4 border-l-2 border-primary">
                       {benefit}
                     </li>
                   ))}

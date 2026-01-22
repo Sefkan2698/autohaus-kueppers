@@ -51,7 +51,7 @@ export default function GoogleMapConsent() {
             </span>
           </p>
 
-          <span className="mt-6 px-6 py-2 bg-neutral-900 text-white text-sm font-medium group-hover:bg-neutral-800 transition-colors">
+          <span className="mt-6 px-6 py-2 bg-primary text-white text-sm font-medium group-hover:bg-primary-dark transition-colors">
             Karte anzeigen
           </span>
         </div>

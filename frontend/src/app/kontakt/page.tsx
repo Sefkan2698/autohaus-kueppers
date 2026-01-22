@@ -30,6 +30,22 @@ const SERVICE_OPTIONS = [
   { value: 'Sonstiger Service', label: 'Sonstiger Service' },
 ];
 
+// Wochentage für Terminauswahl
+const WEEKDAYS = [
+  { value: 'Montag', label: 'M' },
+  { value: 'Dienstag', label: 'D' },
+  { value: 'Mittwoch', label: 'M' },
+  { value: 'Donnerstag', label: 'D' },
+  { value: 'Freitag', label: 'F' },
+];
+
+// Zeitfenster für Terminauswahl
+const TIME_SLOTS = [
+  { value: 'morgens', label: 'Morgens (8-11 Uhr)' },
+  { value: 'mittags', label: 'Mittags (11-13 Uhr)' },
+  { value: 'nachmittags', label: 'Nachmittags (13-17 Uhr)' },
+];
+
 function ContactFormInner() {
   const searchParams = useSearchParams();
 
@@ -40,6 +56,8 @@ function ContactFormInner() {
     message: '',
     subjectCategory: '',
     serviceType: '',
+    preferredDays: [] as string[],
+    preferredTime: '',
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,6 +65,9 @@ function ContactFormInner() {
 
   // Check if service type is required
   const isServiceSelected = formData.subjectCategory === 'Service';
+
+  // Check if appointment selection should be shown
+  const showAppointmentSelection = formData.subjectCategory === 'Service' || formData.subjectCategory === 'Probefahrt';
 
   useEffect(() => {
     const betreff = searchParams.get('betreff');
@@ -99,10 +120,25 @@ function ContactFormInner() {
     setSubmitStatus('idle');
 
     try {
-      // Build the message with service type at the top if applicable
+      // Build the message with service type and appointment preferences
       let finalMessage = formData.message;
+
+      // Add appointment preferences if selected
+      if (showAppointmentSelection && (formData.preferredDays.length > 0 || formData.preferredTime)) {
+        let appointmentInfo = '\n\n--- Terminwunsch ---';
+        if (formData.preferredDays.length > 0) {
+          appointmentInfo += `\nBevorzugte Tage: ${formData.preferredDays.join(', ')}`;
+        }
+        if (formData.preferredTime) {
+          const timeLabel = TIME_SLOTS.find(t => t.value === formData.preferredTime)?.label || formData.preferredTime;
+          appointmentInfo += `\nBevorzugte Zeit: ${timeLabel}`;
+        }
+        finalMessage = finalMessage + appointmentInfo;
+      }
+
+      // Add service type at the top if applicable
       if (isServiceSelected && formData.serviceType) {
-        finalMessage = `Gewünschter Service: ${formData.serviceType}\n\n${formData.message}`;
+        finalMessage = `Gewünschter Service: ${formData.serviceType}\n\n${finalMessage}`;
       }
 
       const response = await fetch(`${API_URL}/api/contact/submit`, {
@@ -124,7 +160,7 @@ function ContactFormInner() {
       }
 
       setSubmitStatus('success');
-      setFormData({ name: '', email: '', phone: '', message: '', subjectCategory: '', serviceType: '' });
+      setFormData({ name: '', email: '', phone: '', message: '', subjectCategory: '', serviceType: '', preferredDays: [], preferredTime: '' });
     } catch (error) {
       console.error('Fehler beim Senden:', error);
       setSubmitStatus('error');
@@ -221,6 +257,80 @@ function ContactFormInner() {
         </div>
       )}
 
+      {/* Terminwunsch - nur sichtbar bei Service oder Probefahrt */}
+      {showAppointmentSelection && (
+        <div className="space-y-4 p-4 bg-neutral-100 border border-neutral-200">
+          <p className="text-sm font-medium text-neutral-700">
+            Wann können wir Sie am besten erreichen?
+          </p>
+
+          {/* Wochentage */}
+          <div>
+            <label className="block text-sm text-neutral-600 mb-2">
+              Bevorzugte Tage
+            </label>
+            <div className="flex gap-2">
+              {WEEKDAYS.map((day) => {
+                const isSelected = formData.preferredDays.includes(day.value);
+                return (
+                  <button
+                    key={day.value}
+                    type="button"
+                    onClick={() => {
+                      setFormData(prev => ({
+                        ...prev,
+                        preferredDays: isSelected
+                          ? prev.preferredDays.filter(d => d !== day.value)
+                          : [...prev.preferredDays, day.value]
+                      }));
+                    }}
+                    className={`w-10 h-10 flex items-center justify-center text-sm font-medium border transition-colors ${
+                      isSelected
+                        ? 'bg-primary text-white border-primary'
+                        : 'bg-white text-neutral-700 border-neutral-300 hover:border-primary hover:text-primary'
+                    }`}
+                    title={day.value}
+                  >
+                    {day.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Zeitfenster */}
+          <div>
+            <label className="block text-sm text-neutral-600 mb-2">
+              Bevorzugte Uhrzeit
+            </label>
+            <div className="flex flex-col sm:flex-row gap-2">
+              {TIME_SLOTS.map((slot) => {
+                const isSelected = formData.preferredTime === slot.value;
+                return (
+                  <button
+                    key={slot.value}
+                    type="button"
+                    onClick={() => {
+                      setFormData(prev => ({
+                        ...prev,
+                        preferredTime: isSelected ? '' : slot.value
+                      }));
+                    }}
+                    className={`px-4 py-2 text-sm font-medium border transition-colors ${
+                      isSelected
+                        ? 'bg-primary text-white border-primary'
+                        : 'bg-white text-neutral-700 border-neutral-300 hover:border-primary hover:text-primary'
+                    }`}
+                  >
+                    {slot.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div>
         <label htmlFor="message" className="block text-sm text-neutral-600 mb-2">
           Nachricht *
@@ -236,7 +346,7 @@ function ContactFormInner() {
       </div>
 
       {submitStatus === 'success' && (
-        <div className="bg-neutral-900 text-white px-4 py-3 text-sm">
+        <div className="bg-primary text-white px-4 py-3 text-sm">
           Vielen Dank! Ihre Nachricht wurde erfolgreich versendet.
         </div>
       )}
@@ -250,7 +360,7 @@ function ContactFormInner() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full bg-neutral-900 text-white px-6 py-3 font-medium hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-primary text-white px-6 py-3 font-medium hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isSubmitting ? 'Wird gesendet...' : 'Nachricht senden'}
       </button>

@@ -156,8 +156,8 @@ export default function FahrzeugePage() {
               onClick={() => setShowFilters(!showFilters)}
               className={`flex items-center justify-center gap-2 px-6 py-3 border transition-colors ${
                 showFilters || activeFiltersCount > 0
-                  ? 'bg-neutral-900 border-neutral-900 text-white'
-                  : 'bg-white border-neutral-200 text-neutral-600 hover:border-neutral-400'
+                  ? 'bg-primary border-primary text-white'
+                  : 'bg-white border-neutral-200 text-neutral-600 hover:border-primary hover:text-primary'
               }`}
             >
               <SlidersHorizontal className="w-4 h-4" strokeWidth={1.5} />
@@ -176,8 +176,8 @@ export default function FahrzeugePage() {
                 onClick={() => setFilterType(type)}
                 className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
                   filterType === type
-                    ? 'bg-neutral-900 text-white'
-                    : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                    ? 'bg-primary text-white'
+                    : 'bg-neutral-100 text-neutral-600 hover:bg-primary/10 hover:text-primary'
                 }`}
               >
                 {type === 'all' ? 'Alle' : getVehicleTypeLabel(type as Vehicle['type'])}

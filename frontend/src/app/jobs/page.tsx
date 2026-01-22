@@ -112,8 +112,8 @@ export default function JobsPage() {
                 onClick={() => setFilterType(type)}
                 className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
                   filterType === type
-                    ? 'bg-neutral-900 text-white'
-                    : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                    ? 'bg-primary text-white'
+                    : 'bg-neutral-100 text-neutral-600 hover:bg-primary/10 hover:text-primary'
                 }`}
               >
                 {type === 'all'

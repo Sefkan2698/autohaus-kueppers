@@ -8,6 +8,7 @@ import carouselRoutes from './routes/carousel.routes.js';
 import contactRoutes from './routes/contact.routes.js';
 import uploadRoutes from './routes/upload.routes.js';
 import teamRoutes from './routes/team.routes.js';
+import userRoutes from './routes/user.routes.js';
 import corsMiddleware from './middleware/cors.middleware.js';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware.js';
 
@@ -40,6 +41,7 @@ app.use('/api/carousel', carouselRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/team', teamRoutes);
+app.use('/api/users', userRoutes);
 
 // 404 Handler (nach allen Routes)
 app.use(notFoundHandler);

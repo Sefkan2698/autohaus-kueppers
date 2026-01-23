@@ -1,0 +1,1 @@
+{"version":3,"file":"superadmin.middleware.d.ts","sourceRoot":"","sources":["../../src/middleware/superadmin.middleware.ts"],"names":[],"mappings":"AAAA,OAAO,OAAO,MAAM,SAAS,CAAC;AAC9B,OAAO,KAAK,EAAE,WAAW,EAAE,MAAM,sBAAsB,CAAC;AAGxD,eAAO,MAAM,oBAAoB,GAC/B,KAAK,WAAW,EAChB,KAAK,OAAO,CAAC,QAAQ,EACrB,MAAM,OAAO,CAAC,YAAY,kBAiB3B,CAAC"}

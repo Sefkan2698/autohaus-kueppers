@@ -11,20 +11,50 @@ import {
   LogOut,
   LayoutDashboard,
   Users,
+  ShieldCheck,
 } from 'lucide-react';
 import Link from 'next/link';
+import { API_URL } from '@/lib/constants';
+
+interface CurrentUser {
+  id: string;
+  email: string;
+  name: string;
+  role: 'ADMIN' | 'SUPER_ADMIN';
+}
 
 export default function AdminDashboardPage() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
 
   useEffect(() => {
     setMounted(true);
     const token = localStorage.getItem('adminToken');
     if (!token) {
       router.push('/admin');
+    } else {
+      fetchCurrentUser();
     }
   }, [router]);
+
+  const fetchCurrentUser = async () => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`${API_URL}/api/users/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setCurrentUser(data);
+      }
+    } catch (error) {
+      console.error('Error fetching current user:', error);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
@@ -75,6 +105,18 @@ export default function AdminDashboardPage() {
       href: '/admin/dashboard/mitarbeiter',
       color: 'bg-orange-500',
     },
+    // Benutzerverwaltung nur für Superadmins (wird dynamisch gefiltert)
+    ...(currentUser?.role === 'SUPER_ADMIN'
+      ? [
+          {
+            title: 'Benutzerverwaltung',
+            description: 'Admin-Benutzer verwalten',
+            icon: ShieldCheck,
+            href: '/admin/dashboard/benutzer',
+            color: 'bg-indigo-500',
+          },
+        ]
+      : []),
   ];
 
   return (

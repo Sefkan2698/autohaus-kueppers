@@ -49,4 +49,39 @@ export const sendContactEmail = async (data: {
   }
 };
 
+export const sendPasswordResetEmail = async (email: string, name: string, resetUrl: string) => {
+  console.log('📧 Sende Passwort-Reset E-Mail an:', email);
+
+  const mailOptions = {
+    from: process.env.MAIL_FROM,
+    to: email,
+    subject: 'Passwort zurücksetzen - Autohaus Küppers',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #333;">Passwort zurücksetzen</h2>
+        <p>Hallo ${name},</p>
+        <p>Sie haben angefordert, Ihr Passwort zurückzusetzen. Klicken Sie auf den folgenden Button, um ein neues Passwort zu erstellen:</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${resetUrl}" style="background-color: #dc2626; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
+            Passwort zurücksetzen
+          </a>
+        </div>
+        <p style="color: #666; font-size: 14px;">Dieser Link ist 1 Stunde gültig.</p>
+        <p style="color: #666; font-size: 14px;">Falls Sie diese Anfrage nicht gestellt haben, ignorieren Sie diese E-Mail einfach.</p>
+        <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
+        <p style="color: #999; font-size: 12px;">Autohaus Küppers</p>
+      </div>
+    `,
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('✅ Passwort-Reset E-Mail gesendet:', info.messageId);
+    return info;
+  } catch (error) {
+    console.error('❌ Passwort-Reset E-Mail Fehler:', error);
+    throw error;
+  }
+};
+
 export default transporter;

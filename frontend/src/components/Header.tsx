@@ -37,13 +37,13 @@ export default function Header() {
       }`}
     >
       <nav className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="flex h-20 items-center justify-between">
+        <div className="flex h-24 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <img
               src="/logo.svg"
               alt="Autohaus Küppers"
-              className={`h-16 w-auto transition-all duration-300 ${isTransparent ? 'brightness-0 invert' : ''}`}
+              className={`h-20 w-auto transition-all duration-300 ${isTransparent ? 'brightness-0 invert' : ''}`}
             />
           </Link>
 

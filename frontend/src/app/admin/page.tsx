@@ -136,6 +136,16 @@ export default function AdminLoginPage() {
                 </>
               )}
             </button>
+
+            {/* Passwort vergessen Link */}
+            <div className="text-center mt-4">
+              <a
+                href="/admin/passwort-vergessen"
+                className="text-sm text-gray-600 hover:text-primary transition-colors"
+              >
+                Passwort vergessen?
+              </a>
+            </div>
           </form>
 
           {/* Footer */}

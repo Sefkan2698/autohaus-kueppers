@@ -52,7 +52,7 @@ export class AuthController {
       // Aus Sicherheitsgründen immer Erfolg melden (auch wenn User nicht existiert)
       if (result) {
         // E-Mail mit Reset-Link senden
-        const resetUrl = `${process.env.API_URL}/reset-password?token=${result.token}`;
+        const resetUrl = `${process.env.FRONTEND_URL || 'https://autohausk.sakaits.com'}/admin/passwort-reset?token=${result.token}`;
         await sendPasswordResetEmail(result.user.email, result.user.name, resetUrl);
       }
 

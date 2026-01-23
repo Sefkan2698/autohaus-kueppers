@@ -288,6 +288,7 @@ export default function AdminBenutzerPage() {
   const [successMessage, setSuccessMessage] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<UserData | null>(null);
+  const [modalKey, setModalKey] = useState(0);
 
   useEffect(() => {
     const token = localStorage.getItem('adminToken');
@@ -350,11 +351,13 @@ export default function AdminBenutzerPage() {
 
   const handleCreate = () => {
     setEditingUser(null);
+    setModalKey((prev) => prev + 1);
     setIsModalOpen(true);
   };
 
   const handleEdit = (user: UserData) => {
     setEditingUser(user);
+    setModalKey((prev) => prev + 1);
     setIsModalOpen(true);
   };
 
@@ -592,6 +595,7 @@ export default function AdminBenutzerPage() {
 
       {/* Modal */}
       <UserModal
+        key={modalKey}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handleSave}

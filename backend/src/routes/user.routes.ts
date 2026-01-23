@@ -13,6 +13,9 @@ router.use(authMiddleware);
 // GET /api/users/me - Aktuellen Benutzer abrufen (alle Admins)
 router.get('/me', userController.getCurrentUser.bind(userController));
 
+// POST /api/users/me/change-password - Eigenes Passwort ändern (alle Admins)
+router.post('/me/change-password', userController.changePassword.bind(userController));
+
 // Ab hier nur für SUPER_ADMIN
 router.use(superAdminMiddleware);
 

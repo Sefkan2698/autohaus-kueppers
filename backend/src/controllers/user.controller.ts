@@ -118,6 +118,30 @@ export class UserController {
       res.status(500).json({ error: 'Fehler beim Abrufen des Benutzers' });
     }
   }
+
+  // Eigenes Passwort ändern
+  async changePassword(req: AuthRequest, res: express.Response) {
+    try {
+      const userId = req.user!.userId;
+      const { currentPassword, newPassword } = req.body;
+
+      if (!currentPassword || !newPassword) {
+        res.status(400).json({ error: 'Aktuelles und neues Passwort sind erforderlich' });
+        return;
+      }
+
+      if (newPassword.length < 8) {
+        res.status(400).json({ error: 'Neues Passwort muss mindestens 8 Zeichen haben' });
+        return;
+      }
+
+      await userService.changePassword(userId, currentPassword, newPassword);
+      res.json({ message: 'Passwort erfolgreich geändert' });
+    } catch (error: any) {
+      console.error('Error changing password:', error);
+      res.status(400).json({ error: error.message || 'Fehler beim Ändern des Passworts' });
+    }
+  }
 }
 
 export default new UserController();

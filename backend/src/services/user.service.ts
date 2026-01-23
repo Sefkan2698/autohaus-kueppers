@@ -116,6 +116,33 @@ export class UserService {
     if (excludeId && user.id === excludeId) return false;
     return true;
   }
+
+  // Eigenes Passwort ändern (mit Verifizierung des aktuellen Passworts)
+  async changePassword(userId: string, currentPassword: string, newPassword: string) {
+    // Hole den Benutzer mit Passwort
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new Error('Benutzer nicht gefunden');
+    }
+
+    // Prüfe aktuelles Passwort
+    const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+    if (!isPasswordValid) {
+      throw new Error('Aktuelles Passwort ist falsch');
+    }
+
+    // Hash neues Passwort und speichern
+    const hashedPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
+    await prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword },
+    });
+
+    return { success: true };
+  }
 }
 
 export default new UserService();

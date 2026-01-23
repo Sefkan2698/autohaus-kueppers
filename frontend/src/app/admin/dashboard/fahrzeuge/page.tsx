@@ -82,6 +82,7 @@ export default function AdminFahrzeugePage() {
   const [successMessage, setSuccessMessage] = useState('');
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('adminToken');
@@ -195,11 +196,17 @@ export default function AdminFahrzeugePage() {
     setImageFiles([]);
     setImagePreviews([]);
     setError('');
+    setIsSubmitting(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Verhindere doppeltes Absenden
+    if (isSubmitting) return;
+
     setError('');
+    setIsSubmitting(true);
 
     try {
       const token = localStorage.getItem('adminToken');
@@ -269,6 +276,8 @@ export default function AdminFahrzeugePage() {
     } catch (error) {
       console.error('Error saving vehicle:', error);
       setError('Verbindungsfehler');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -835,15 +844,17 @@ export default function AdminFahrzeugePage() {
                   <button
                     type="button"
                     onClick={closeModal}
-                    className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                    disabled={isSubmitting}
+                    className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Abbrechen
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
+                    disabled={isSubmitting}
+                    className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {editingVehicle ? 'Aktualisieren' : 'Erstellen'}
+                    {isSubmitting ? 'Speichert...' : editingVehicle ? 'Aktualisieren' : 'Erstellen'}
                   </button>
                 </div>
               </form>

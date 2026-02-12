@@ -1,4 +1,6 @@
-import { Wrench, ClipboardCheck, Package } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Wrench, ClipboardCheck, Package, ArrowRight } from 'lucide-react';
 
 const services = [
   {
@@ -33,12 +35,22 @@ export default function ServicesSection() {
       <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
         {/* Section Header */}
         <div className="mb-16 md:mb-20">
-          <p className="text-neutral-500 text-sm tracking-[0.2em] uppercase mb-4">
+          <p className="text-xs text-neutral-500 uppercase tracking-[0.2em] mb-4">
             Leistungen
           </p>
-          <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 max-w-lg">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-neutral-900 max-w-lg">
             <span className="text-primary">Alles aus einer Hand</span>
           </h2>
+        </div>
+
+        {/* Hero Image */}
+        <div className="relative aspect-[21/9] mb-16 md:mb-20 overflow-hidden">
+          <Image
+            src="/images/kundendienst/werkstatt.jpg"
+            alt="Unsere Werkstatt"
+            fill
+            className="object-cover"
+          />
         </div>
 
         {/* Services Grid */}
@@ -61,9 +73,27 @@ export default function ServicesSection() {
                 </h3>
 
                 {/* Description */}
-                <p className="text-neutral-600 text-sm leading-relaxed">
+                <p className="text-sm text-neutral-600 leading-relaxed mb-4">
                   {service.description}
                 </p>
+
+                {/* Links */}
+                <div className="flex flex-col gap-2">
+                  <Link
+                    href="/kundendienst"
+                    className="inline-flex items-center gap-1 text-sm text-neutral-500 hover:text-primary transition-colors"
+                  >
+                    Mehr erfahren
+                    <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
+                  </Link>
+                  <Link
+                    href="/kontakt?betreff=Service"
+                    className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary-dark transition-colors"
+                  >
+                    Termin vereinbaren
+                    <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
+                  </Link>
+                </div>
               </div>
             );
           })}

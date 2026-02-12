@@ -208,10 +208,10 @@ export default function FahrzeugDetailPage() {
           <div>
             {/* Header */}
             <div className="mb-8">
-              <p className="text-neutral-500 text-sm tracking-[0.2em] uppercase mb-2">
+              <p className="text-xs text-neutral-500 uppercase tracking-[0.2em] mb-2">
                 {getVehicleTypeLabel(vehicle.type)}
               </p>
-              <h1 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-2">
+              <h1 className="text-3xl md:text-4xl font-bold text-primary mb-2">
                 {vehicle.title}
               </h1>
               <p className="text-neutral-500">

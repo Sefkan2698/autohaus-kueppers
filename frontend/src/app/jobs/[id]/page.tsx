@@ -92,7 +92,7 @@ export default function JobDetailPage() {
 
         {/* Job Header */}
         <div className="mb-12">
-          <p className="text-neutral-500 text-sm tracking-[0.2em] uppercase mb-4">
+          <p className="text-xs text-neutral-500 uppercase tracking-[0.2em] mb-4">
             {getJobTypeLabel(job.type)}
           </p>
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-4">
@@ -157,7 +157,7 @@ export default function JobDetailPage() {
 
           {/* Apply CTA */}
           <div className="bg-neutral-100 p-8 md:p-12">
-            <p className="text-neutral-500 text-sm tracking-[0.2em] uppercase mb-4">
+            <p className="text-xs text-neutral-500 uppercase tracking-[0.2em] mb-4">
               Interesse geweckt?
             </p>
             <h2 className="text-2xl md:text-3xl font-bold text-neutral-900 mb-4">

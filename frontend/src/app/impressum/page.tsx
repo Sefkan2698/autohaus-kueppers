@@ -4,10 +4,10 @@ export default function ImpressumPage() {
       <div className="max-w-3xl mx-auto px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12">
-          <p className="text-neutral-500 text-sm tracking-[0.2em] uppercase mb-4">
+          <p className="text-xs text-neutral-500 uppercase tracking-[0.2em] mb-4">
             Rechtliches
           </p>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-neutral-900">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary">
             Impressum
           </h1>
         </div>

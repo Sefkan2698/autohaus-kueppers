@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Search, MapPin, ArrowRight } from 'lucide-react';
+import { Search, MapPin, ArrowRight, Image as ImageIcon } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { API_URL } from '@/lib/constants';
 
@@ -78,16 +79,27 @@ export default function JobsPage() {
       <div className="max-w-4xl mx-auto px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12">
-          <p className="text-neutral-500 text-sm tracking-[0.2em] uppercase mb-4">
+          <p className="text-xs text-neutral-500 uppercase tracking-[0.2em] mb-4">
             Karriere
           </p>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-neutral-900 mb-6">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-6">
             Werden Sie Teil unseres Teams
           </h1>
           <p className="text-neutral-600 text-lg leading-relaxed max-w-2xl">
             Wir suchen motivierte Mitarbeiter für unser traditionsreiches Autohaus in Goch.
             Entdecken Sie unsere aktuellen Stellenangebote.
           </p>
+        </div>
+
+        {/* Hero Image */}
+        <div className="relative aspect-[21/9] mb-12 overflow-hidden">
+          <Image
+            src="/images/job/jobbg2.jpg"
+            alt="Unser Team bei Autohaus Küppers"
+            fill
+            className="object-cover"
+            priority
+          />
         </div>
 
         {/* Search & Filter */}
@@ -144,7 +156,7 @@ export default function JobsPage() {
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 mb-3 flex-wrap">
-                      <h3 className="text-lg md:text-xl font-semibold text-neutral-900 group-hover:text-primary transition-colors">
+                      <h3 className="text-lg font-semibold text-neutral-900 group-hover:text-primary transition-colors">
                         {job.title}
                       </h3>
                       <span className="px-3 py-1 bg-neutral-100 text-neutral-600 text-xs font-medium">
@@ -165,7 +177,7 @@ export default function JobsPage() {
                       )}
                     </div>
 
-                    <p className="text-neutral-600 text-sm leading-relaxed line-clamp-2">
+                    <p className="text-sm text-neutral-600 leading-relaxed line-clamp-2">
                       {job.description}
                     </p>
                   </div>
@@ -177,16 +189,22 @@ export default function JobsPage() {
           </div>
         )}
 
+        {/* Workplace Impressions Placeholder */}
+        <div className="mt-16 aspect-[21/9] bg-neutral-100 border border-neutral-200 flex flex-col items-center justify-center">
+          <ImageIcon className="w-10 h-10 text-neutral-300 mb-3" strokeWidth={1.5} />
+          <p className="text-sm text-neutral-400">Arbeitsplatz-Impressionen</p>
+        </div>
+
         {/* General Application CTA */}
         <div className="mt-16 bg-neutral-100 p-8 md:p-12">
           <div className="max-w-xl">
-            <p className="text-neutral-500 text-sm tracking-[0.2em] uppercase mb-4">
+            <p className="text-xs text-neutral-500 uppercase tracking-[0.2em] mb-4">
               Initiativbewerbung
             </p>
             <h2 className="text-2xl md:text-3xl font-bold text-neutral-900 mb-4">
               Keine passende Stelle dabei?
             </h2>
-            <p className="text-neutral-600 mb-8">
+            <p className="text-sm text-neutral-600 leading-relaxed mb-8">
               Bewerben Sie sich initiativ. Wir freuen uns, von Ihnen zu hören.
             </p>
             <Link

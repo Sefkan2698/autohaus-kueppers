@@ -391,11 +391,11 @@ export default function KontaktPage() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Header */}
         <div className="max-w-3xl mb-16 md:mb-20">
-          <p className="text-neutral-500 text-sm tracking-[0.2em] uppercase mb-4">
+          <p className="text-xs text-neutral-500 uppercase tracking-[0.2em] mb-4">
             Kontakt
           </p>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-neutral-900 mb-6">
-            <span className="text-primary">Wir sind für Sie da</span>
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-6">
+            Wir sind für Sie da
           </h1>
           <p className="text-neutral-600 text-lg leading-relaxed">
             Haben Sie Fragen zu unseren Fahrzeugen oder Services? Vereinbaren Sie einen Termin
@@ -465,18 +465,36 @@ export default function KontaktPage() {
               <p className="text-xs text-neutral-500 uppercase tracking-wider mb-6">
                 Öffnungszeiten
               </p>
-              <div className="grid grid-cols-3 gap-6">
+              <div className="space-y-5">
                 <div>
-                  <p className="text-sm text-primary font-medium mb-1">Verkauf</p>
-                  <p className="text-neutral-900 font-medium text-sm">{CONTENT.hours.sales.weekdays}</p>
+                  <p className="text-sm text-primary font-medium mb-3">Verkauf</p>
+                  <div className="text-sm space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-neutral-600">Mo. – Do.</span>
+                      <span className="text-neutral-900 text-right">9:00 – 13:00 &amp; 15:00 – 18:00 Uhr</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-neutral-600">Fr.</span>
+                      <span className="text-neutral-900 text-right">9:00 – 13:00 &amp; 15:00 – 17:00 Uhr</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-neutral-600">Sa.</span>
+                      <span className="text-neutral-900 text-right">9:00 – 12:30 Uhr</span>
+                    </div>
+                  </div>
                 </div>
                 <div>
-                  <p className="text-sm text-primary font-medium mb-1">Service</p>
-                  <p className="text-neutral-900 font-medium text-sm">{CONTENT.hours.service.weekdays}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-primary font-medium mb-1">Teile</p>
-                  <p className="text-neutral-900 font-medium text-sm">{CONTENT.hours.parts}</p>
+                  <p className="text-sm text-primary font-medium mb-3">Werkstatt</p>
+                  <div className="text-sm space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-neutral-600">Mo. – Fr.</span>
+                      <span className="text-neutral-900 text-right">7:30 – 12:00 &amp; 13:00 – 17:00 Uhr</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-neutral-600">Sa.</span>
+                      <span className="text-neutral-900 text-right">9:00 – 12:30 Uhr</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

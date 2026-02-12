@@ -37,20 +37,34 @@ export default function Footer() {
           {/* Opening Hours - Verkauf */}
           <div>
             <p className="text-white font-semibold mb-6">Verkauf</p>
-            <div className="text-sm text-neutral-400 space-y-1">
-              <p>Mo. – Fr.</p>
-              <p>9:00 – 13:00 Uhr</p>
-              <p>15:00 – 17:30 Uhr</p>
+            <div className="text-sm text-neutral-400 space-y-2">
+              <div className="flex justify-between gap-4">
+                <span>Mo. – Do.</span>
+                <span className="text-right">9:00 – 13:00 Uhr<br />15:00 – 18:00 Uhr</span>
+              </div>
+              <div className="flex justify-between gap-4">
+                <span>Fr.</span>
+                <span className="text-right">9:00 – 13:00 Uhr<br />15:00 – 17:00 Uhr</span>
+              </div>
+              <div className="flex justify-between gap-4">
+                <span>Sa.</span>
+                <span className="text-right">9:00 – 12:30 Uhr</span>
+              </div>
             </div>
           </div>
 
-          {/* Opening Hours - Service */}
+          {/* Opening Hours - Werkstatt */}
           <div>
             <p className="text-white font-semibold mb-6">Werkstatt</p>
-            <div className="text-sm text-neutral-400 space-y-1">
-              <p>Mo. – Fr.</p>
-              <p>7:30 – 12:00 Uhr</p>
-              <p>13:00 – 17:00 Uhr</p>
+            <div className="text-sm text-neutral-400 space-y-2">
+              <div className="flex justify-between gap-4">
+                <span>Mo. – Fr.</span>
+                <span className="text-right">7:30 – 12:00 Uhr<br />13:00 – 17:00 Uhr</span>
+              </div>
+              <div className="flex justify-between gap-4">
+                <span>Sa.</span>
+                <span className="text-right">9:00 – 12:30 Uhr</span>
+              </div>
             </div>
           </div>
 

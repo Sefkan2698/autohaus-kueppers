@@ -89,7 +89,7 @@ export default function TrustSection() {
               Google Bewertungen
             </p>
 
-            <div className="relative bg-white">
+            <div className="bg-white border border-neutral-200 rounded-lg overflow-hidden">
               <Image
                 src={reviews[currentReview]}
                 alt={`Google Bewertung ${currentReview + 1}`}
@@ -98,43 +98,29 @@ export default function TrustSection() {
                 className="w-full h-auto"
                 unoptimized
               />
+            </div>
 
-              {/* Navigation */}
-              <div className="absolute bottom-4 right-4 flex gap-2">
+            {/* Navigation unterhalb des Bildes */}
+            <div className="flex items-center justify-between mt-4">
+              <span className="text-sm text-neutral-500">
+                {currentReview + 1} / {reviews.length}
+              </span>
+              <div className="flex items-center gap-3">
                 <button
                   onClick={prevReview}
-                  className="w-10 h-10 flex items-center justify-center bg-white/90 hover:bg-white transition-colors"
+                  className="w-10 h-10 flex items-center justify-center border border-neutral-300 text-neutral-500 hover:border-primary hover:text-primary transition-colors"
                   aria-label="Vorherige Bewertung"
                 >
-                  <ChevronLeft className="w-5 h-5 text-neutral-900" strokeWidth={1.5} />
+                  <ChevronLeft className="w-5 h-5" strokeWidth={1.5} />
                 </button>
                 <button
                   onClick={nextReview}
-                  className="w-10 h-10 flex items-center justify-center bg-white/90 hover:bg-white transition-colors"
+                  className="w-10 h-10 flex items-center justify-center border border-neutral-300 text-neutral-500 hover:border-primary hover:text-primary transition-colors"
                   aria-label="Nächste Bewertung"
                 >
-                  <ChevronRight className="w-5 h-5 text-neutral-900" strokeWidth={1.5} />
+                  <ChevronRight className="w-5 h-5" strokeWidth={1.5} />
                 </button>
               </div>
-
-              {/* Counter */}
-              <div className="absolute bottom-4 left-4 px-3 py-1 bg-black/60 text-white text-sm">
-                {currentReview + 1} / {reviews.length}
-              </div>
-            </div>
-
-            {/* Dots */}
-            <div className="flex justify-center gap-2 mt-4">
-              {reviews.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentReview(index)}
-                  className={`w-2 h-2 transition-colors ${
-                    currentReview === index ? 'bg-primary' : 'bg-neutral-300'
-                  }`}
-                  aria-label={`Zu Bewertung ${index + 1} gehen`}
-                />
-              ))}
             </div>
           </div>
         </div>

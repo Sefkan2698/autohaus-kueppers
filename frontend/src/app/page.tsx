@@ -1,4 +1,5 @@
 import HeroSection from '@/components/HeroSection';
+import ModelsSection from '@/components/ModelsSection';
 import ServicesSection from '@/components/ServicesSection';
 import TeamSection from '@/components/TeamSection';
 import TrustSection from '@/components/TrustSection';
@@ -9,6 +10,7 @@ export default function Home() {
     <main>
       <InfoBanner />
       <HeroSection />
+      <ModelsSection />
       <ServicesSection />
       <TrustSection />
       <TeamSection />

@@ -189,12 +189,6 @@ export default function JobsPage() {
           </div>
         )}
 
-        {/* Workplace Impressions Placeholder */}
-        <div className="mt-16 aspect-[21/9] bg-neutral-100 border border-neutral-200 flex flex-col items-center justify-center">
-          <ImageIcon className="w-10 h-10 text-neutral-300 mb-3" strokeWidth={1.5} />
-          <p className="text-sm text-neutral-400">Arbeitsplatz-Impressionen</p>
-        </div>
-
         {/* General Application CTA */}
         <div className="mt-16 bg-neutral-100 p-8 md:p-12">
           <div className="max-w-xl">

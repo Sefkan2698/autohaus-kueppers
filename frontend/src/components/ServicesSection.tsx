@@ -54,11 +54,14 @@ export default function ServicesSection() {
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 md:items-stretch">
           {services.map((service, index) => {
             const Icon = service.icon;
             return (
-              <div key={index} className="group">
+              <div
+                key={index}
+                className="group flex flex-col h-full bg-white border border-neutral-200 rounded-lg p-8 hover:shadow-lg hover:border-neutral-300 hover:-translate-y-1 transition-all duration-300"
+              >
                 {/* Icon */}
                 <div className="mb-6">
                   <Icon
@@ -73,12 +76,12 @@ export default function ServicesSection() {
                 </h3>
 
                 {/* Description */}
-                <p className="text-sm text-neutral-600 leading-relaxed mb-4">
+                <p className="text-sm text-neutral-600 leading-relaxed mb-4 flex-grow">
                   {service.description}
                 </p>
 
                 {/* Links */}
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 mt-auto">
                   <Link
                     href="/kundendienst"
                     className="inline-flex items-center gap-1 text-sm text-neutral-500 hover:text-primary transition-colors"

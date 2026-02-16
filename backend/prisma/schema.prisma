@@ -187,6 +187,22 @@ enum SubmissionStatus {
   ARCHIVED    // Archiviert
 }
 
+// Neueste Modelle für Homepage Section
+model NewModel {
+  id          String   @id @default(uuid())
+  title       String   // z.B. "Der neue C3"
+  description String   @db.Text
+  imageUrl    String   // Hochgeladenes Bild (WebP)
+  alt         String?  // Alt-Text für SEO
+  isActive    Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive, order])
+  @@map("new_models")
+}
+
 // Team-Mitglieder für "Unser Team" Section
 model TeamMember {
   id        String   @id @default(uuid())

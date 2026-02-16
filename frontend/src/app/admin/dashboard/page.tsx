@@ -320,10 +320,10 @@ export default function AdminDashboardPage() {
       color: 'bg-green-500',
     },
     {
-      title: 'Carousel',
-      description: 'Bilder der Hero-Section verwalten',
+      title: 'Neueste Modelle',
+      description: 'Modelle auf der Startseite verwalten',
       icon: ImageIcon,
-      href: '/admin/dashboard/carousel',
+      href: '/admin/dashboard/modelle',
       color: 'bg-purple-500',
     },
     {

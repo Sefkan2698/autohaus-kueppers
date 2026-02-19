@@ -14,9 +14,27 @@ import {
   X,
   AlertCircle,
   Upload,
+  GripVertical,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { API_URL } from '@/lib/constants';
 
 interface NewModel {
@@ -28,6 +46,118 @@ interface NewModel {
   isActive: boolean;
   order: number;
   createdAt: string;
+}
+
+// Sortable Model Item Component
+function SortableModelItem({
+  model,
+  onEdit,
+  onDelete,
+  onToggleActive,
+}: {
+  model: NewModel;
+  onEdit: (model: NewModel) => void;
+  onDelete: (id: string) => void;
+  onToggleActive: (id: string) => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: model.id,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+    >
+      <div className="flex flex-col md:flex-row">
+        {/* Drag Handle */}
+        <div className="flex items-center px-3 py-4 md:py-0 bg-gray-50 md:bg-transparent border-b md:border-b-0 md:border-r border-gray-200">
+          <button
+            {...attributes}
+            {...listeners}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-grab active:cursor-grabbing touch-none"
+            style={{ touchAction: 'none' }}
+            title="Ziehen zum Sortieren"
+          >
+            <GripVertical className="w-5 h-5 text-gray-400" />
+          </button>
+        </div>
+
+        {/* Bild-Vorschau */}
+        <div className="relative w-full md:w-64 h-48 md:h-auto flex-shrink-0">
+          <Image
+            src={
+              model.imageUrl.startsWith('http')
+                ? model.imageUrl
+                : `${API_URL}${model.imageUrl}`
+            }
+            alt={model.title}
+            fill
+            className="object-cover"
+            unoptimized
+          />
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 p-6">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-3">
+                {model.isActive ? (
+                  <span className="flex items-center gap-1 text-sm text-green-600 font-medium">
+                    <Eye className="w-4 h-4" />
+                    Aktiv
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1 text-sm text-gray-500">
+                    <EyeOff className="w-4 h-4" />
+                    Inaktiv
+                  </span>
+                )}
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">{model.title}</h3>
+              <p className="text-gray-700 text-sm line-clamp-3">{model.description}</p>
+            </div>
+
+            <div className="flex gap-2 flex-shrink-0">
+              <button
+                onClick={() => onToggleActive(model.id)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                title={model.isActive ? 'Deaktivieren' : 'Aktivieren'}
+              >
+                {model.isActive ? (
+                  <EyeOff className="w-5 h-5 text-gray-600" />
+                ) : (
+                  <Eye className="w-5 h-5 text-gray-600" />
+                )}
+              </button>
+              <button
+                onClick={() => onEdit(model)}
+                className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                title="Bearbeiten"
+              >
+                <Edit2 className="w-5 h-5 text-blue-600" />
+              </button>
+              <button
+                onClick={() => onDelete(model.id)}
+                className="p-2 hover:bg-red-50 rounded-lg transition-colors"
+                title="Löschen"
+              >
+                <Trash2 className="w-5 h-5 text-red-600" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default function AdminModellePage() {
@@ -47,6 +177,17 @@ export default function AdminModellePage() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
   useEffect(() => {
     const token = localStorage.getItem('adminToken');
     if (!token) {
@@ -65,7 +206,7 @@ export default function AdminModellePage() {
         },
       });
       const data = await response.json();
-      setModels(data);
+      setModels(data.sort((a: NewModel, b: NewModel) => a.order - b.order));
     } catch (error) {
       console.error('Error fetching models:', error);
       setError('Fehler beim Laden der Modelle');
@@ -204,6 +345,50 @@ export default function AdminModellePage() {
     } catch (error) {
       console.error('Error toggling model:', error);
       setError('Verbindungsfehler');
+    }
+  };
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = models.findIndex((m) => m.id === active.id);
+    const newIndex = models.findIndex((m) => m.id === over.id);
+
+    const newModels = arrayMove(models, oldIndex, newIndex);
+
+    const updatedModels = newModels.map((m, index) => ({
+      ...m,
+      order: index,
+    }));
+
+    setModels(updatedModels);
+
+    try {
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`${API_URL}/api/new-models/reorder`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          models: updatedModels.map((m) => ({ id: m.id, order: m.order })),
+        }),
+      });
+
+      if (response.ok) {
+        setSuccessMessage('Reihenfolge aktualisiert');
+        setTimeout(() => setSuccessMessage(''), 3000);
+      } else {
+        setError('Fehler beim Speichern der Reihenfolge');
+        fetchModels();
+      }
+    } catch (error) {
+      console.error('Error updating order:', error);
+      setError('Fehler beim Speichern der Reihenfolge');
+      fetchModels();
     }
   };
 
@@ -413,82 +598,24 @@ export default function AdminModellePage() {
               <p className="text-gray-500">Keine Modelle vorhanden. Erstellen Sie Ihr erstes Modell!</p>
             </div>
           ) : (
-            models.map((model) => (
-              <motion.div
-                key={model.id}
-                className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                <div className="flex flex-col md:flex-row">
-                  {/* Bild-Vorschau */}
-                  <div className="relative w-full md:w-64 h-48 md:h-auto flex-shrink-0">
-                    <Image
-                      src={
-                        model.imageUrl.startsWith('http')
-                          ? model.imageUrl
-                          : `${API_URL}${model.imageUrl}`
-                      }
-                      alt={model.title}
-                      fill
-                      className="object-cover"
-                      unoptimized
+            <>
+              <p className="text-sm text-gray-600 mb-4">
+                {models.length} {models.length === 1 ? 'Modell' : 'Modelle'} – Ziehen Sie die Einträge, um die Reihenfolge zu ändern
+              </p>
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <SortableContext items={models.map((m) => m.id)} strategy={verticalListSortingStrategy}>
+                  {models.map((model) => (
+                    <SortableModelItem
+                      key={model.id}
+                      model={model}
+                      onEdit={handleEdit}
+                      onDelete={handleDelete}
+                      onToggleActive={toggleActive}
                     />
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1 p-6">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-3">
-                          {model.isActive ? (
-                            <span className="flex items-center gap-1 text-sm text-green-600 font-medium">
-                              <Eye className="w-4 h-4" />
-                              Aktiv
-                            </span>
-                          ) : (
-                            <span className="flex items-center gap-1 text-sm text-gray-500">
-                              <EyeOff className="w-4 h-4" />
-                              Inaktiv
-                            </span>
-                          )}
-                        </div>
-                        <h3 className="text-lg font-bold text-gray-900 mb-2">{model.title}</h3>
-                        <p className="text-gray-700 text-sm line-clamp-3">{model.description}</p>
-                      </div>
-
-                      <div className="flex gap-2 flex-shrink-0">
-                        <button
-                          onClick={() => toggleActive(model.id)}
-                          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                          title={model.isActive ? 'Deaktivieren' : 'Aktivieren'}
-                        >
-                          {model.isActive ? (
-                            <EyeOff className="w-5 h-5 text-gray-600" />
-                          ) : (
-                            <Eye className="w-5 h-5 text-gray-600" />
-                          )}
-                        </button>
-                        <button
-                          onClick={() => handleEdit(model)}
-                          className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
-                          title="Bearbeiten"
-                        >
-                          <Edit2 className="w-5 h-5 text-blue-600" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(model.id)}
-                          className="p-2 hover:bg-red-50 rounded-lg transition-colors"
-                          title="Löschen"
-                        >
-                          <Trash2 className="w-5 h-5 text-red-600" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))
+                  ))}
+                </SortableContext>
+              </DndContext>
+            </>
           )}
         </div>
       </main>

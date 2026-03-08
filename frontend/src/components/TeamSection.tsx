@@ -42,17 +42,8 @@ export default function TeamSection() {
   }
 
   return (
-    <section className="relative py-24 md:py-32 overflow-hidden">
-      {/* Diagonaler Hintergrund - von unten links nach oben rechts */}
-      <div className="absolute inset-0 bg-white" />
-      <div
-        className="absolute inset-0 bg-neutral-100"
-        style={{
-          clipPath: 'polygon(0 65%, 100% 35%, 100% 100%, 0 100%)',
-        }}
-      />
-
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+    <section className="py-24 md:py-32 bg-white">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Section Header */}
         <div className="mb-16 md:mb-20">
           <p className="text-xs text-neutral-500 uppercase tracking-[0.2em] mb-4">

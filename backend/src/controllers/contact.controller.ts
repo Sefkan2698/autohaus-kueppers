@@ -34,18 +34,19 @@ export class ContactController {
         vehicleId,
       });
 
-      // E-Mail versenden
-      console.log('🔄 Starte Mail-Versand...');
-      await sendContactEmail({ name, email, phone, message, subject, vehicleId });
-      console.log('✅ Mail wurde erfolgreich versendet');
-
-      res.status(201).json({ 
+      res.status(201).json({
         message: 'Kontaktanfrage erfolgreich gesendet',
-        id: submission.id 
+        id: submission.id
       });
+
+      // E-Mail versenden (nach Response, damit Fehler den Nutzer nicht blockieren)
+      console.log('🔄 Starte Mail-Versand...');
+      sendContactEmail({ name, email, phone, message, subject, vehicleId })
+        .then(() => console.log('✅ Mail wurde erfolgreich versendet'))
+        .catch((err) => console.error('❌ Mail-Versand fehlgeschlagen (Anfrage wurde trotzdem gespeichert):', err));
     } catch (error) {
       console.error('❌ Fehler im Controller:', error);
-      res.status(400).json({ error: 'Fehler beim Senden der Kontaktanfrage' });
+      res.status(500).json({ error: 'Fehler beim Speichern der Kontaktanfrage' });
     }
   }
 

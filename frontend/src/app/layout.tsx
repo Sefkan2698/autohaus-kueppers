@@ -6,8 +6,8 @@ import LayoutWrapper from "@/components/LayoutWrapper";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Autohaus Küppers - Ihr Citroën Partner",
-  description: "Vorführwagen, Gebrauchtwagen und Jahreswagen bei Autohaus Küppers",
+  title: "Autohaus Küppers GmbH - Ihr Citroën Partner",
+  description: "Vorführwagen, Gebrauchtwagen und Jahreswagen bei Autohaus Küppers GmbH in Goch.",
   icons: {
     icon: "/logo.svg",
   },

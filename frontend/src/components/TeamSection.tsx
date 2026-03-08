@@ -59,7 +59,7 @@ export default function TeamSection() {
             Team
           </p>
           <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 max-w-lg">
-            Die Menschen hinter <span className="text-primary">Küppers</span>
+             <span className="text-primary">Autohaus Küppers GmbH</span>
           </h2>
           <p className="text-neutral-600 text-lg leading-relaxed mt-4 max-w-xl">
             Unser engagiertes Team steht Ihnen mit Kompetenz und Leidenschaft zur Seite.

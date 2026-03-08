@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { MapPin, Phone, Mail } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 import { CONTENT, API_URL } from '@/lib/constants';
 import GoogleMapConsent from '@/components/GoogleMapConsent';
 
@@ -406,93 +406,68 @@ export default function KontaktPage() {
         {/* Main Content Grid */}
         <div className="grid lg:grid-cols-2 gap-16 mb-20">
           {/* Contact Information */}
-          <div>
+          <div className="order-2 lg:order-1">
             <p className="text-xs text-neutral-500 uppercase tracking-wider mb-6">
               Kontaktinformationen
             </p>
 
-            <div className="space-y-8">
-              {/* Address */}
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-neutral-100 flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-5 h-5 text-neutral-600" strokeWidth={1.5} />
-                </div>
-                <div>
-                  <p className="font-medium text-primary mb-1">Adresse</p>
-                  <p className="text-neutral-600 text-sm leading-relaxed">
-                    {CONTENT.address.street}<br />
-                    {CONTENT.address.city}<br />
-                    {CONTENT.address.country}
-                  </p>
-                </div>
-              </div>
-
-              {/* Phone */}
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-neutral-100 flex items-center justify-center flex-shrink-0">
-                  <Phone className="w-5 h-5 text-neutral-600" strokeWidth={1.5} />
-                </div>
-                <div>
-                  <p className="font-medium text-primary mb-1">Telefon</p>
-                  <a
-                    href={`tel:${CONTENT.phone.replace(/\s/g, '')}`}
-                    className="text-neutral-600 text-sm hover:text-neutral-900 transition-colors"
-                  >
-                    {CONTENT.phone}
-                  </a>
-                </div>
-              </div>
-
-              {/* Email */}
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-neutral-100 flex items-center justify-center flex-shrink-0">
-                  <Mail className="w-5 h-5 text-neutral-600" strokeWidth={1.5} />
-                </div>
-                <div>
-                  <p className="font-medium text-primary mb-1">E-Mail</p>
-                  <a
-                    href={`mailto:${CONTENT.email}`}
-                    className="text-neutral-600 text-sm hover:text-neutral-900 transition-colors"
-                  >
-                    {CONTENT.email}
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* Opening Hours */}
-            <div className="mt-12 pt-12 border-t border-neutral-200">
-              <p className="text-xs text-neutral-500 uppercase tracking-wider mb-6">
-                Öffnungszeiten
-              </p>
-              <div className="space-y-5">
-                <div>
-                  <p className="text-sm text-primary font-medium mb-3">Verkauf</p>
-                  <div className="text-sm space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-neutral-600">Mo. – Do.</span>
-                      <span className="text-neutral-900 text-right">9:00 – 13:00 &amp; 15:00 – 18:00 Uhr</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-neutral-600">Fr.</span>
-                      <span className="text-neutral-900 text-right">9:00 – 13:00 &amp; 15:00 – 17:00 Uhr</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-neutral-600">Sa.</span>
-                      <span className="text-neutral-900 text-right">9:00 – 12:30 Uhr</span>
+            <div className="space-y-4">
+              {/* Verkauf Card */}
+              <div className="bg-white border border-neutral-200 rounded-xl p-6">
+                <h3 className="font-semibold text-primary mb-5">Verkauf</h3>
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-center gap-3 text-neutral-600">
+                    <Mail className="w-4 h-4 flex-shrink-0 text-neutral-400" strokeWidth={1.5} />
+                    <a href={`mailto:${CONTENT.email}`} className="hover:text-neutral-900 transition-colors">
+                      {CONTENT.email}
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-3 text-neutral-600">
+                    <Phone className="w-4 h-4 flex-shrink-0 text-neutral-400" strokeWidth={1.5} />
+                    <a href={`tel:${CONTENT.phone.replace(/\s/g, '')}`} className="hover:text-neutral-900 transition-colors">
+                      {CONTENT.phone}
+                    </a>
+                  </div>
+                  <div className="flex items-start gap-3 text-neutral-600">
+                    <MapPin className="w-4 h-4 flex-shrink-0 text-neutral-400 mt-0.5" strokeWidth={1.5} />
+                    <span>{CONTENT.address.street}, {CONTENT.address.city}</span>
+                  </div>
+                  <div className="flex items-start gap-3 text-neutral-600 pt-3 mt-1 border-t border-neutral-100">
+                    <Clock className="w-4 h-4 flex-shrink-0 text-neutral-400 mt-0.5" strokeWidth={1.5} />
+                    <div className="space-y-0.5">
+                      <p><span className="font-medium">Mo.–Do.:</span> 9:00–13:00 & 15:00–18:00 Uhr</p>
+                      <p><span className="font-medium">Fr.:</span> 9:00–13:00 & 15:00–17:00 Uhr</p>
+                      <p><span className="font-medium">Sa.:</span> 9:00–12:30 Uhr</p>
                     </div>
                   </div>
                 </div>
-                <div>
-                  <p className="text-sm text-primary font-medium mb-3">Werkstatt</p>
-                  <div className="text-sm space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-neutral-600">Mo. – Fr.</span>
-                      <span className="text-neutral-900 text-right">7:30 – 12:00 &amp; 13:00 – 17:00 Uhr</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-neutral-600">Sa.</span>
-                      <span className="text-neutral-900 text-right">9:00 – 12:30 Uhr</span>
+              </div>
+
+              {/* Werkstatt Card */}
+              <div className="bg-white border border-neutral-200 rounded-xl p-6">
+                <h3 className="font-semibold text-primary mb-5">Werkstatt</h3>
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-center gap-3 text-neutral-600">
+                    <Mail className="w-4 h-4 flex-shrink-0 text-neutral-400" strokeWidth={1.5} />
+                    <a href={`mailto:${CONTENT.email}`} className="hover:text-neutral-900 transition-colors">
+                      {CONTENT.email}
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-3 text-neutral-600">
+                    <Phone className="w-4 h-4 flex-shrink-0 text-neutral-400" strokeWidth={1.5} />
+                    <a href={`tel:${CONTENT.phone.replace(/\s/g, '')}`} className="hover:text-neutral-900 transition-colors">
+                      {CONTENT.phone}
+                    </a>
+                  </div>
+                  <div className="flex items-start gap-3 text-neutral-600">
+                    <MapPin className="w-4 h-4 flex-shrink-0 text-neutral-400 mt-0.5" strokeWidth={1.5} />
+                    <span>{CONTENT.address.street}, {CONTENT.address.city}</span>
+                  </div>
+                  <div className="flex items-start gap-3 text-neutral-600 pt-3 mt-1 border-t border-neutral-100">
+                    <Clock className="w-4 h-4 flex-shrink-0 text-neutral-400 mt-0.5" strokeWidth={1.5} />
+                    <div className="space-y-0.5">
+                      <p><span className="font-medium">Mo.–Fr.:</span> 7:30–12:00 & 13:00–17:00 Uhr</p>
+                      <p><span className="font-medium">Sa.:</span> 9:00–12:30 Uhr</p>
                     </div>
                   </div>
                 </div>
@@ -501,11 +476,11 @@ export default function KontaktPage() {
           </div>
 
           {/* Contact Form */}
-          <div className="bg-neutral-50 p-8 md:p-10">
+          <div className="order-1 lg:order-2 bg-neutral-50 p-8 md:p-10">
             <p className="text-xs text-neutral-500 uppercase tracking-wider mb-4">
               Nachricht senden
             </p>
-            <h2 className="text-2xl font-bold text-neutral-900 mb-8">
+            <h2 className="text-2xl font-bold text-primary mb-8">
               Schreiben Sie uns
             </h2>
 

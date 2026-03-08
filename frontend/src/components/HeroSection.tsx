@@ -53,18 +53,6 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 animate-bounce">
-        {/* Mouse */}
-        <svg width="28" height="42" viewBox="0 0 28 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="1" y="1" width="26" height="40" rx="13" stroke="white" strokeWidth="2" />
-          <rect x="12" y="8" width="4" height="10" rx="2" className="fill-primary" />
-        </svg>
-        {/* Arrow Down */}
-        <svg width="16" height="10" viewBox="0 0 16 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M1 1L8 8L15 1" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </div>
     </section>
   );
 }

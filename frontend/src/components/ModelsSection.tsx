@@ -15,26 +15,46 @@ interface NewModel {
   order: number;
 }
 
+interface Vehicle {
+  id: string;
+  title: string;
+  type: string;
+  price: number;
+  mileage: number;
+  yearBuilt: number;
+  fuelType: string;
+  images: { url: string; alt?: string; order: number }[];
+}
+
 export default function ModelsSection() {
   const [models, setModels] = useState<NewModel[]>([]);
+  const [usedCars, setUsedCars] = useState<Vehicle[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    fetchModels();
+    const fetchData = async () => {
+      try {
+        const [modelsRes, vehiclesRes] = await Promise.all([
+          fetch(`${API_URL}/api/new-models?isActive=true`),
+          fetch(`${API_URL}/api/vehicles?isActive=true`),
+        ]);
+        const modelsData = await modelsRes.json();
+        const vehiclesData = await vehiclesRes.json();
+        setModels(modelsData);
+        setUsedCars(
+          vehiclesData
+            .filter((v: Vehicle) => v.type === 'USED_CAR')
+            .slice(0, 3)
+        );
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
   }, []);
-
-  const fetchModels = async () => {
-    try {
-      const response = await fetch(`${API_URL}/api/new-models?isActive=true`);
-      const data = await response.json();
-      setModels(data);
-    } catch (error) {
-      console.error('Error fetching models:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const goToPrevious = () => {
     setCurrentIndex((prev) => (prev - 1 + models.length) % models.length);
@@ -121,18 +141,91 @@ export default function ModelsSection() {
           </div>
         </div>
 
-        {/* Gebrauchtwagen CTA */}
-        <div className="mt-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-neutral-200 pt-8">
-          <p className="text-lg md:text-xl font-semibold text-neutral-900">
-            An Gebrauchtwagen interessiert?
-          </p>
-          <Link
-            href="/fahrzeuge"
-            className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary-dark transition-colors"
-          >
-            Mehr erfahren
-            <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
-          </Link>
+        {/* Gebrauchtwagen Section */}
+        <div className="mt-16">
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <p className="text-xs text-neutral-500 uppercase tracking-[0.2em] mb-2">
+                Gebrauchtwagen
+              </p>
+              <h3 className="text-2xl md:text-3xl font-bold text-neutral-900">
+                Haben Sie Interesse an <span className="text-primary">Gebrauchtwagen?</span>
+              </h3>
+            </div>
+            <Link
+              href="/fahrzeuge?typ=USED_CAR"
+              className="hidden sm:inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary-dark transition-colors flex-shrink-0"
+            >
+              Alle ansehen
+              <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
+            </Link>
+          </div>
+
+          {usedCars.length > 0 ? (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+                {usedCars.map((vehicle) => (
+                  <Link
+                    key={vehicle.id}
+                    href={`/fahrzeuge/${vehicle.id}`}
+                    className="group bg-white border border-neutral-200 rounded-xl overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
+                  >
+                    <div className="relative aspect-[4/3] bg-neutral-100">
+                      {vehicle.images.length > 0 ? (
+                        <Image
+                          src={
+                            vehicle.images[0].url.startsWith('http')
+                              ? vehicle.images[0].url
+                              : `${API_URL}${vehicle.images[0].url}`
+                          }
+                          alt={vehicle.images[0].alt || vehicle.title}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          unoptimized
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <span className="text-neutral-300 text-sm">Kein Bild</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-4">
+                      <h4 className="text-sm font-semibold text-neutral-900 line-clamp-1 mb-1">
+                        {vehicle.title}
+                      </h4>
+                      <div className="flex items-center gap-3 text-xs text-neutral-500 mb-2">
+                        <span>{vehicle.yearBuilt}</span>
+                        <span className="w-1 h-1 bg-neutral-300 rounded-full" />
+                        <span>{vehicle.mileage.toLocaleString()} km</span>
+                        <span className="w-1 h-1 bg-neutral-300 rounded-full" />
+                        <span>{vehicle.fuelType}</span>
+                      </div>
+                      <p className="text-base font-semibold text-primary">
+                        {vehicle.price.toLocaleString()} €
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+              <div className="mt-6 sm:hidden">
+                <Link
+                  href="/fahrzeuge?typ=USED_CAR"
+                  className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary-dark transition-colors"
+                >
+                  Alle Gebrauchtwagen ansehen
+                  <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
+                </Link>
+              </div>
+            </>
+          ) : (
+            <Link
+              href="/fahrzeuge?typ=USED_CAR"
+              className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary-dark transition-colors"
+            >
+              Alle Gebrauchtwagen ansehen
+              <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
+            </Link>
+          )}
         </div>
       </div>
     </section>

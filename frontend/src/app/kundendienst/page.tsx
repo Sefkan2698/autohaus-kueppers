@@ -2,11 +2,12 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Phone, ArrowRight } from 'lucide-react';
+import { Phone, ArrowRight, Check, Wrench, ClipboardCheck, HeadphonesIcon } from 'lucide-react';
 import { CONTENT } from '@/lib/constants';
 
 const services = [
   {
+    icon: Wrench,
     category: 'Reparaturen & Wartung',
     description: 'Unser Meisterbetrieb kümmert sich um alle Reparaturen – von der kleinen Inspektion bis zur kompletten Instandsetzung. Mit modernster Technik und über 30 Jahren Erfahrung.',
     items: [
@@ -19,6 +20,7 @@ const services = [
     ],
   },
   {
+    icon: ClipboardCheck,
     category: 'Checks & Inspektionen',
     description: 'Regelmäßige Checks sorgen für Sicherheit und Werterhalt. Wir prüfen Ihr Fahrzeug gründlich und bereiten es optimal auf jede Jahreszeit vor.',
     items: [
@@ -30,6 +32,7 @@ const services = [
     ],
   },
   {
+    icon: HeadphonesIcon,
     category: 'Service & Beratung',
     description: 'Wir beraten Sie kompetent in allen Fragen rund ums Auto – von Finanzierung bis zum Ersatzfahrzeug während der Reparatur.',
     items: [
@@ -54,7 +57,7 @@ export default function KundendienstPage() {
           </h1>
           <p className="text-neutral-600 text-lg leading-relaxed">
             Wir betreuen Sie individuell, denn Ihre persönlichen Anliegen sind unser Auftrag.
-            Das Kundendienst-Team vom Autohaus Küppers steht Ihnen für alle Ihre Fragen zur Verfügung.
+            Das Kundendienst-Team der Autohaus Küppers GmbH steht Ihnen für alle Ihre Fragen zur Verfügung.
           </p>
         </div>
 
@@ -70,37 +73,38 @@ export default function KundendienstPage() {
         </div>
 
         {/* Services Grid */}
-        <div className="grid md:grid-cols-3 gap-12 md:gap-8 mb-20">
-          {services.map((service, index) => (
-            <div key={index} className="flex flex-col">
-              <h2 className="text-lg font-semibold text-primary mb-4 pb-4 border-b border-neutral-200">
-                {service.category}
-              </h2>
-              <p className="text-sm text-neutral-600 leading-relaxed mb-6">
-                {service.description}
-              </p>
-              <ul className="space-y-3 mb-6 flex-1">
-                {service.items.map((item, itemIndex) => (
-                  <li key={itemIndex} className="text-sm text-neutral-600 leading-relaxed flex items-start gap-2">
-                    <span className="text-primary mt-1.5 flex-shrink-0">•</span>
-                    <Link
-                      href="/kontakt?betreff=Service"
-                      className="hover:text-primary transition-colors"
-                    >
-                      {item}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href="/kontakt?betreff=Service"
-                className="inline-flex items-center gap-2 bg-primary text-white px-5 py-2.5 text-sm font-medium hover:bg-primary-dark transition-colors self-start"
-              >
-                Termin vereinbaren
-                <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
-              </Link>
-            </div>
-          ))}
+        <div className="grid md:grid-cols-3 gap-6 mb-20">
+          {services.map((service, index) => {
+            const Icon = service.icon;
+            return (
+              <div key={index} className="flex flex-col bg-white border border-neutral-200 rounded-xl p-7">
+                <div className="mb-5">
+                  <Icon className="w-6 h-6 text-primary" strokeWidth={1.5} />
+                </div>
+                <h2 className="text-lg font-semibold text-primary mb-3">
+                  {service.category}
+                </h2>
+                <p className="text-sm text-neutral-600 leading-relaxed mb-6">
+                  {service.description}
+                </p>
+                <ul className="space-y-2.5 mb-7 flex-1">
+                  {service.items.map((item, itemIndex) => (
+                    <li key={itemIndex} className="flex items-start gap-3 text-sm text-neutral-600">
+                      <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" strokeWidth={2} />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/kontakt?betreff=Service"
+                  className="inline-flex items-center gap-2 bg-primary text-white px-5 py-2.5 text-sm font-medium hover:bg-primary-dark transition-colors self-start rounded"
+                >
+                  Termin vereinbaren
+                  <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
+                </Link>
+              </div>
+            );
+          })}
         </div>
 
         {/* Contact Section */}
@@ -130,40 +134,6 @@ export default function KundendienstPage() {
                 Online anfragen
                 <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
               </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Hours */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-neutral-200 mt-px">
-          <div className="bg-white p-6 md:p-8">
-            <p className="text-xs text-primary uppercase tracking-wider mb-4 font-medium">Verkauf</p>
-            <div className="space-y-1 text-sm">
-              <div className="flex justify-between">
-                <span className="text-neutral-600">Mo. – Do.</span>
-                <span className="text-neutral-900 font-medium">{CONTENT.hours.sales.monThu}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-neutral-600">Fr.</span>
-                <span className="text-neutral-900 font-medium">{CONTENT.hours.sales.fri}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-neutral-600">Sa.</span>
-                <span className="text-neutral-900 font-medium">{CONTENT.hours.sales.sat}</span>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white p-6 md:p-8">
-            <p className="text-xs text-primary uppercase tracking-wider mb-4 font-medium">Werkstatt</p>
-            <div className="space-y-1 text-sm">
-              <div className="flex justify-between">
-                <span className="text-neutral-600">Mo. – Fr.</span>
-                <span className="text-neutral-900 font-medium">{CONTENT.hours.service.monFri}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-neutral-600">Sa.</span>
-                <span className="text-neutral-900 font-medium">{CONTENT.hours.service.sat}</span>
-              </div>
             </div>
           </div>
         </div>

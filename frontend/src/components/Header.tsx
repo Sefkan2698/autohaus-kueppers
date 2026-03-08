@@ -63,7 +63,7 @@ export default function Header() {
             <img
               src="/logo.svg"
               alt="Autohaus Küppers"
-              className={`h-20 w-auto transition-all duration-300 ${isTransparent ? 'brightness-0 invert' : ''}`}
+              className="h-20 w-auto"
             />
           </Link>
 

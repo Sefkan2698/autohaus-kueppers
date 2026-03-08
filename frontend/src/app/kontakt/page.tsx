@@ -62,6 +62,7 @@ function ContactFormInner() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
   // Check if service type is required
   const isServiceSelected = formData.subjectCategory === 'Service';
@@ -156,13 +157,19 @@ function ContactFormInner() {
       });
 
       if (!response.ok) {
-        throw new Error('Fehler beim Senden der Nachricht');
+        const errorData = await response.json().catch(() => null);
+        const errorMsg = errorData?.errors?.map((e: { field: string; message: string }) => `${e.field}: ${e.message}`).join(', ')
+          || errorData?.error
+          || errorData?.message
+          || 'Fehler beim Senden der Nachricht';
+        throw new Error(errorMsg);
       }
 
       setSubmitStatus('success');
       setFormData({ name: '', email: '', phone: '', message: '', subjectCategory: '', serviceType: '', preferredDays: [], preferredTime: '' });
     } catch (error) {
       console.error('Fehler beim Senden:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Unbekannter Fehler');
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -353,7 +360,7 @@ function ContactFormInner() {
 
       {submitStatus === 'error' && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 text-sm">
-          Fehler beim Senden der Nachricht. Bitte versuchen Sie es später erneut.
+          {errorMessage || 'Fehler beim Senden der Nachricht. Bitte versuchen Sie es später erneut.'}
         </div>
       )}
 

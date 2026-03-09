@@ -425,8 +425,8 @@ export default function KontaktPage() {
                 <div className="space-y-3 text-sm">
                   <div className="flex items-center gap-3 text-neutral-600">
                     <Mail className="w-4 h-4 flex-shrink-0 text-neutral-400" strokeWidth={1.5} />
-                    <a href={`mailto:${CONTENT.email}`} className="hover:text-neutral-900 transition-colors">
-                      {CONTENT.email}
+                    <a href="mailto:ht.kueppers@auto-kueppers.de" className="hover:text-neutral-900 transition-colors">
+                      ht.kueppers@auto-kueppers.de
                     </a>
                   </div>
                   <div className="flex items-center gap-3 text-neutral-600">
@@ -448,6 +448,13 @@ export default function KontaktPage() {
                     </div>
                   </div>
                 </div>
+                <a
+                  href="mailto:ht.kueppers@auto-kueppers.de"
+                  className="mt-5 inline-flex items-center gap-2 bg-primary text-white px-4 py-2.5 text-sm font-medium hover:bg-primary-dark transition-colors rounded"
+                >
+                  <Mail className="w-4 h-4" strokeWidth={1.5} />
+                  E-Mail Verkauf
+                </a>
               </div>
 
               {/* Werkstatt Card */}
@@ -456,8 +463,8 @@ export default function KontaktPage() {
                 <div className="space-y-3 text-sm">
                   <div className="flex items-center gap-3 text-neutral-600">
                     <Mail className="w-4 h-4 flex-shrink-0 text-neutral-400" strokeWidth={1.5} />
-                    <a href={`mailto:${CONTENT.email}`} className="hover:text-neutral-900 transition-colors">
-                      {CONTENT.email}
+                    <a href="mailto:info@auto-kueppers.de" className="hover:text-neutral-900 transition-colors">
+                      info@auto-kueppers.de
                     </a>
                   </div>
                   <div className="flex items-center gap-3 text-neutral-600">
@@ -478,6 +485,13 @@ export default function KontaktPage() {
                     </div>
                   </div>
                 </div>
+                <a
+                  href="mailto:info@auto-kueppers.de"
+                  className="mt-5 inline-flex items-center gap-2 bg-primary text-white px-4 py-2.5 text-sm font-medium hover:bg-primary-dark transition-colors rounded"
+                >
+                  <Mail className="w-4 h-4" strokeWidth={1.5} />
+                  E-Mail Werkstatt
+                </a>
               </div>
             </div>
           </div>

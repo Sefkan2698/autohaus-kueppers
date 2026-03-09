@@ -26,13 +26,13 @@ export default function HeroSection() {
       </div>
 
       {/* Content Box - Mittig Links */}
-      <div className="absolute z-10 top-1/2 -translate-y-1/2 left-6 lg:left-8 w-[calc(100%-3rem)] sm:w-auto max-w-xl">
+      <div className="hero-slide-in absolute z-10 top-1/2 -translate-y-1/2 left-6 lg:left-8 w-[calc(100%-3rem)] sm:w-auto max-w-xl">
         <div className="bg-black/30 backdrop-blur-md border border-white/10 p-5 md:p-7 rounded-lg flex flex-col text-left items-start">
           <h1 className="text-white text-xl md:text-2xl lg:text-3xl font-bold leading-tight mb-2">
             Autohaus Küppers
           </h1>
           <p className="text-white/90 text-sm md:text-base leading-relaxed mb-5">
-            Qualität und Service seit über 30 Jahren. Ihr Partner für Neuwagen, Vorführwagen und Gebrauchtwagen in Goch.
+            Qualität und Service seit über 65 Jahren – 50 Jahre Citroën in Goch. Ihr Partner für Neuwagen, Vorführwagen und Gebrauchtwagen.
           </p>
 
           {/* CTA Buttons */}

@@ -8,7 +8,7 @@ export default function Footer() {
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {/* Company Info */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm">
+          <div className="bg-white rounded-2xl p-6 shadow-sm flex flex-col">
             <p className="text-primary font-semibold mb-5">Autohaus Küppers GmbH</p>
             <div className="space-y-3 text-sm text-neutral-600">
               <div className="flex items-start gap-3">
@@ -25,31 +25,43 @@ export default function Footer() {
                   +49 (0) 2823 3143
                 </a>
               </div>
-              <div className="flex items-center gap-3">
-                <Mail className="w-4 h-4 flex-shrink-0 text-neutral-400" strokeWidth={1.5} />
-                <a href="mailto:info@auto-kueppers.de" className="hover:text-neutral-900 transition-colors">
-                  info@auto-kueppers.de
-                </a>
-              </div>
+            </div>
+            <div className="flex items-center gap-3 overflow-hidden mt-auto pt-3">
+              <Mail className="w-4 h-4 flex-shrink-0 text-neutral-400" strokeWidth={1.5} />
+              <a href="mailto:info@auto-kueppers.de" className="hover:text-neutral-900 transition-colors text-xs whitespace-nowrap overflow-hidden text-ellipsis">
+                info@auto-kueppers.de
+              </a>
             </div>
           </div>
 
           {/* Opening Hours - Verkauf */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm">
+          <div className="bg-white rounded-2xl p-6 shadow-sm flex flex-col">
             <p className="text-primary font-semibold mb-5">Verkauf</p>
             <div className="text-sm text-neutral-600 space-y-1.5">
               <p><span className="font-medium">Mo.–Do.:</span> 9:00–13:00 & 15:00–18:00 Uhr</p>
               <p><span className="font-medium">Fr.:</span> 9:00–13:00 & 15:00–17:00 Uhr</p>
               <p><span className="font-medium">Sa.:</span> 9:00–12:30 Uhr</p>
             </div>
+            <div className="flex items-center gap-2 overflow-hidden mt-auto pt-3">
+              <Mail className="w-4 h-4 flex-shrink-0 text-neutral-400" strokeWidth={1.5} />
+              <a href="mailto:ht.kueppers@auto-kueppers.de" className="hover:text-neutral-900 transition-colors text-xs whitespace-nowrap overflow-hidden text-ellipsis">
+                ht.kueppers@auto-kueppers.de
+              </a>
+            </div>
           </div>
 
           {/* Opening Hours - Werkstatt */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm">
+          <div className="bg-white rounded-2xl p-6 shadow-sm flex flex-col">
             <p className="text-primary font-semibold mb-5">Werkstatt</p>
             <div className="text-sm text-neutral-600 space-y-1.5">
               <p><span className="font-medium">Mo.–Fr.:</span> 7:30–12:00 & 13:00–17:00 Uhr</p>
               <p><span className="font-medium">Sa.:</span> 9:00–12:30 Uhr</p>
+            </div>
+            <div className="flex items-center gap-2 overflow-hidden mt-auto pt-3">
+              <Mail className="w-4 h-4 flex-shrink-0 text-neutral-400" strokeWidth={1.5} />
+              <a href="mailto:info@auto-kueppers.de" className="hover:text-neutral-900 transition-colors text-xs whitespace-nowrap overflow-hidden text-ellipsis">
+                info@auto-kueppers.de
+              </a>
             </div>
           </div>
 

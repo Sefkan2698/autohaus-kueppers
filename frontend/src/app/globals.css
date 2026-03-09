@@ -36,3 +36,19 @@ button.cursor-grab {
   -webkit-user-select: none;
   user-select: none;
 }
+
+/* Hero Content Box Einflug-Animation */
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.hero-slide-in {
+  animation: slideInFromLeft 0.7s ease-out forwards;
+}

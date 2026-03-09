@@ -63,7 +63,7 @@ export default function Header() {
             <img
               src="/logo.svg"
               alt="Autohaus Küppers"
-              className="h-20 w-auto"
+              className="h-28 w-auto"
             />
           </Link>
 

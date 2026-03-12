@@ -5,49 +5,81 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Menu, X, Phone, ChevronDown } from 'lucide-react';
 
-const fahrzeugeSubItems = [
-  { name: 'Alle Fahrzeuge', href: '/fahrzeuge' },
-  { name: 'Vorführwagen', href: '/fahrzeuge?typ=DEMO_CAR' },
-  { name: 'Gebrauchtwagen', href: '/fahrzeuge?typ=USED_CAR' },
-  { name: 'Jahreswagen', href: '/fahrzeuge?typ=YEAR_CAR' },
+type SubItem = { name: string; href: string };
+type NavItem = {
+  name: string;
+  href: string;
+  subItems?: SubItem[];
+  highlight?: boolean;
+};
+
+const navigation: NavItem[] = [
+  { name: 'Home', href: '/' },
+  {
+    name: 'Fahrzeuge',
+    href: '/fahrzeuge',
+    subItems: [
+      { name: 'Alle Fahrzeuge', href: '/fahrzeuge' },
+      { name: 'Vorführwagen', href: '/fahrzeuge?typ=DEMO_CAR' },
+      { name: 'Gebrauchtwagen', href: '/fahrzeuge?typ=USED_CAR' },
+      { name: 'Jahreswagen', href: '/fahrzeuge?typ=YEAR_CAR' },
+    ],
+  },
+  {
+    name: 'Kundendienst',
+    href: '/kundendienst',
+    subItems: [
+      { name: 'Kundendienst', href: '/kundendienst' },
+      { name: 'DEKRA Stützpunkt', href: '/dekra-stuetzpunkt' },
+    ],
+  },
+  { name: 'Gewerbebereich', href: '/gewerbe' },
+  {
+    name: 'Elektromobilität',
+    href: '/aktionen/citroen-foerderung',
+    highlight: true,
+    subItems: [
+      { name: 'Elektrofahrzeuge & Förderung', href: '/aktionen/citroen-foerderung' },
+      { name: 'Sofort verfügbare E- & Hybridmodelle', href: '/fahrzeuge?kraftstoff=Elektro,Hybrid' },
+      { name: 'Elektro FAQ', href: '/elektro-faq' },
+    ],
+  },
+  {
+    name: 'Karriere',
+    href: '/jobs',
+    subItems: [
+      { name: 'Offene Stellenangebote', href: '/jobs' },
+      { name: 'Online Bewerbungsformular', href: '/karriere/bewerbungsformular' },
+    ],
+  },
+  { name: 'Kontakt', href: '/kontakt' },
 ];
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [fahrzeugeDropdownOpen, setFahrzeugeDropdownOpen] = useState(false);
-  const [mobileFahrzeugeOpen, setMobileFahrzeugeOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [mobileOpen, setMobileOpen] = useState<string | null>(null);
+  const navRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const isHomePage = pathname === '/';
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setFahrzeugeDropdownOpen(false);
+      if (navRef.current && !navRef.current.contains(event.target as Node)) {
+        setOpenDropdown(null);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const navigation = [
-    { name: 'Home', href: '/' },
-    { name: 'Fahrzeuge', href: '/fahrzeuge', hasDropdown: true },
-    { name: 'Kundendienst', href: '/kundendienst' },
-    { name: 'Jobs', href: '/jobs' },
-    { name: 'Kontakt', href: '/kontakt' },
-  ];
-
-  // Auf anderen Seiten immer "scrolled" Style (weiß)
   const isTransparent = isHomePage && !scrolled;
 
   return (
@@ -59,52 +91,50 @@ export default function Header() {
       <nav className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="flex h-24 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <img
-              src="/logo.svg"
-              alt="Autohaus Küppers"
-              className="h-28 w-auto"
-            />
+          <Link href="/" className="flex items-center flex-shrink-0">
+            <img src="/logo.svg" alt="Autohaus Küppers" className="h-28 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center md:gap-8">
+          <div className="hidden md:flex md:items-center md:gap-6 lg:gap-8 md:ml-12 lg:ml-16" ref={navRef}>
             {navigation.map((item) =>
-              item.hasDropdown ? (
+              item.subItems ? (
                 <div
                   key={item.name}
                   className="relative"
-                  ref={dropdownRef}
-                  onMouseEnter={() => setFahrzeugeDropdownOpen(true)}
-                  onMouseLeave={() => setFahrzeugeDropdownOpen(false)}
+                  onMouseEnter={() => setOpenDropdown(item.name)}
+                  onMouseLeave={() => setOpenDropdown(null)}
                 >
                   <Link
                     href={item.href}
-                    className={`flex items-center gap-1 text-sm font-medium transition-colors ${
-                      isTransparent
-                        ? 'text-white/80 hover:text-white'
-                        : 'text-neutral-600 hover:text-neutral-900'
+                    className={`flex items-center gap-1 text-sm transition-colors whitespace-nowrap ${
+                      item.highlight
+                        ? isTransparent
+                          ? 'font-semibold text-primary bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded'
+                          : 'font-semibold text-primary hover:text-primary-dark'
+                        : isTransparent
+                        ? 'font-medium text-white/80 hover:text-white'
+                        : 'font-medium text-neutral-600 hover:text-neutral-900'
                     }`}
                   >
                     {item.name}
                     <ChevronDown
                       className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                        fahrzeugeDropdownOpen ? 'rotate-180' : ''
+                        openDropdown === item.name ? 'rotate-180' : ''
                       }`}
                       strokeWidth={1.5}
                     />
                   </Link>
 
-                  {/* Dropdown */}
-                  {fahrzeugeDropdownOpen && (
-                    <div className="absolute top-full left-0 pt-2 w-48">
+                  {openDropdown === item.name && (
+                    <div className="absolute top-full left-0 pt-2 w-64 z-50">
                       <div className="bg-white border border-neutral-200 shadow-lg py-2">
-                        {fahrzeugeSubItems.map((subItem) => (
+                        {item.subItems.map((subItem) => (
                           <Link
                             key={subItem.name}
                             href={subItem.href}
                             className="block px-4 py-2 text-sm text-neutral-600 hover:text-primary hover:bg-neutral-50 transition-colors"
-                            onClick={() => setFahrzeugeDropdownOpen(false)}
+                            onClick={() => setOpenDropdown(null)}
                           >
                             {subItem.name}
                           </Link>
@@ -113,6 +143,18 @@ export default function Header() {
                     </div>
                   )}
                 </div>
+              ) : item.highlight ? (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`text-sm font-semibold transition-colors whitespace-nowrap ${
+                    isTransparent
+                      ? 'text-primary bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded'
+                      : 'text-primary hover:text-primary-dark'
+                  }`}
+                >
+                  {item.name}
+                </Link>
               ) : (
                 <Link
                   key={item.name}
@@ -131,7 +173,7 @@ export default function Header() {
             {/* Call Button Desktop */}
             <a
               href="tel:+49 2823 3143"
-              className={`flex items-center gap-2 px-5 py-2.5 text-sm font-medium transition-colors ${
+              className={`flex items-center gap-2 px-5 py-2.5 text-sm font-medium transition-colors flex-shrink-0 ${
                 isTransparent
                   ? 'bg-white text-neutral-900 hover:bg-white/90'
                   : 'bg-primary text-white hover:bg-primary-dark'
@@ -158,14 +200,22 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className={`md:hidden py-6 space-y-4 ${isTransparent ? 'bg-black/80 backdrop-blur-sm -mx-6 px-6' : ''}`}>
+          <div
+            className={`md:hidden py-6 space-y-4 ${
+              isTransparent ? 'bg-black/80 backdrop-blur-sm -mx-6 px-6' : ''
+            }`}
+          >
             {navigation.map((item) =>
-              item.hasDropdown ? (
+              item.subItems ? (
                 <div key={item.name}>
                   <button
-                    onClick={() => setMobileFahrzeugeOpen(!mobileFahrzeugeOpen)}
+                    onClick={() =>
+                      setMobileOpen(mobileOpen === item.name ? null : item.name)
+                    }
                     className={`flex items-center gap-1 w-full font-medium transition-colors ${
-                      isTransparent
+                      item.highlight
+                        ? 'text-primary font-semibold'
+                        : isTransparent
                         ? 'text-white/80 hover:text-white'
                         : 'text-neutral-600 hover:text-neutral-900'
                     }`}
@@ -173,14 +223,14 @@ export default function Header() {
                     {item.name}
                     <ChevronDown
                       className={`w-4 h-4 transition-transform duration-200 ${
-                        mobileFahrzeugeOpen ? 'rotate-180' : ''
+                        mobileOpen === item.name ? 'rotate-180' : ''
                       }`}
                       strokeWidth={1.5}
                     />
                   </button>
-                  {mobileFahrzeugeOpen && (
+                  {mobileOpen === item.name && (
                     <div className="mt-2 ml-4 space-y-2">
-                      {fahrzeugeSubItems.map((subItem) => (
+                      {item.subItems.map((subItem) => (
                         <Link
                           key={subItem.name}
                           href={subItem.href}
@@ -202,7 +252,9 @@ export default function Header() {
                   key={item.name}
                   href={item.href}
                   className={`block font-medium transition-colors ${
-                    isTransparent
+                    item.highlight
+                      ? 'text-primary font-semibold'
+                      : isTransparent
                       ? 'text-white/80 hover:text-white'
                       : 'text-neutral-600 hover:text-neutral-900'
                   }`}

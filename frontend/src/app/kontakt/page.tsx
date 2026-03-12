@@ -10,6 +10,8 @@ import GoogleMapConsent from '@/components/GoogleMapConsent';
 const SUBJECT_OPTIONS = [
   { value: '', label: 'Bitte wählen...' },
   { value: 'Kaufanfrage', label: 'Kaufanfrage' },
+  { value: 'Gewerbeanfrage', label: 'Gewerbeanfrage' },
+  { value: 'Förderanfrage', label: 'E-Auto & Förderung' },
   { value: 'Probefahrt', label: 'Probefahrt vereinbaren' },
   { value: 'Service', label: 'Service & Werkstatt' },
   { value: 'Finanzierung', label: 'Finanzierung & Leasing' },
@@ -81,7 +83,11 @@ function ContactFormInner() {
         opt.value.toLowerCase() === betreff.toLowerCase()
       );
       if (matchedCategory) {
-        setFormData(prev => ({ ...prev, subjectCategory: matchedCategory.value }));
+        const updates: Partial<typeof formData> = { subjectCategory: matchedCategory.value };
+        if (matchedCategory.value === 'Förderanfrage') {
+          updates.message = 'Ich interessiere mich für ein E-Auto mit Citroën Förderprämie und bitte um ein individuelles Angebot.\n\n';
+        }
+        setFormData(prev => ({ ...prev, ...updates }));
       } else {
         setFormData(prev => ({ ...prev, subjectCategory: 'Sonstiges' }));
       }

@@ -22,29 +22,29 @@ const services = [
 
 export default function ServicesSection() {
   return (
-    <section className="py-24 md:py-32 bg-white">
+    <section className="py-24 md:py-32 bg-white overflow-hidden">
+      {/* Section Header */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 mb-16 md:mb-20">
+        <p className="text-xs text-neutral-500 uppercase tracking-[0.2em] mb-4">
+          Leistungen
+        </p>
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-neutral-900 max-w-lg">
+          <span className="text-primary">Alles aus einer Hand</span>
+        </h2>
+      </div>
+
+      {/* Hero Image – full viewport width */}
+      <div className="relative w-full aspect-[21/5] mb-16 md:mb-20">
+        <Image
+          src="/images/kundendienst/werkstatt.jpg"
+          alt="Unsere Werkstatt"
+          fill
+          className="object-cover object-top"
+        />
+      </div>
+
+      {/* Services Grid */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="mb-16 md:mb-20">
-          <p className="text-xs text-neutral-500 uppercase tracking-[0.2em] mb-4">
-            Leistungen
-          </p>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-neutral-900 max-w-lg">
-            <span className="text-primary">Alles aus einer Hand</span>
-          </h2>
-        </div>
-
-        {/* Hero Image */}
-        <div className="relative aspect-[21/9] mb-16 md:mb-20 overflow-hidden">
-          <Image
-            src="/images/kundendienst/werkstatt.jpg"
-            alt="Unsere Werkstatt"
-            fill
-            className="object-cover"
-          />
-        </div>
-
-        {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 md:items-stretch">
           {services.map((service, index) => {
             const Icon = service.icon;

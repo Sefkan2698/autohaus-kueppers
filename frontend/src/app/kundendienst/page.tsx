@@ -1,9 +1,29 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Phone, ArrowRight, Check, Wrench, ClipboardCheck, HeadphonesIcon } from 'lucide-react';
 import { CONTENT } from '@/lib/constants';
+
+export const metadata: Metadata = {
+  title: 'Kundendienst & Werkstatt – Autohaus Küppers Goch',
+  description:
+    'Meisterbetrieb mit über 30 Jahren Erfahrung: KFZ-Reparaturen, HU/AU, Inspektionen und Reifenservice in Goch. Schnelle Termine und persönliche Beratung.',
+  keywords: [
+    'Werkstatt Goch',
+    'KFZ Reparatur Goch',
+    'Citroën Werkstatt Goch',
+    'Inspektion Goch',
+    'Reifenservice Goch',
+    'Kundendienst Autohaus Küppers',
+    'Autowerkstatt Niederrhein',
+  ],
+  openGraph: {
+    title: 'Kundendienst & Werkstatt – Autohaus Küppers Goch',
+    description:
+      'KFZ-Reparaturen aller Art, HU/AU direkt im Haus und persönliche Betreuung. Ihr Meisterbetrieb in Goch.',
+    type: 'website',
+  },
+};
 
 const services = [
   {
@@ -45,32 +65,36 @@ const services = [
 
 export default function KundendienstPage() {
   return (
-    <main className="pt-28 pb-20 bg-white min-h-screen">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        {/* Header */}
-        <div className="max-w-3xl mb-16 md:mb-20">
-          <p className="text-xs text-neutral-500 uppercase tracking-[0.2em] mb-4">
-            Kundendienst
-          </p>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-6">
-            Wir nehmen es persönlich
-          </h1>
-          <p className="text-neutral-600 text-lg leading-relaxed">
-            Wir betreuen Sie individuell, denn Ihre persönlichen Anliegen sind unser Auftrag.
-            Das Kundendienst-Team der Autohaus Küppers GmbH steht Ihnen für alle Ihre Fragen zur Verfügung.
-          </p>
-        </div>
+    <main className="bg-white min-h-screen">
 
-        {/* Hero Image */}
-        <div className="relative aspect-[21/9] mb-16 md:mb-20 overflow-hidden">
+      {/* Hero Banner */}
+      <div className="relative w-full pt-24">
+        <div className="relative w-full aspect-[21/9] md:aspect-[3/1] overflow-hidden">
           <Image
             src="/images/kundendienst/werkstatt2.jpg"
             alt="Werkstatt Autohaus Küppers"
             fill
-            className="object-cover"
+            className="object-cover object-center"
             priority
           />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
+          <div className="absolute inset-0 flex items-center">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full">
+              <p className="text-white/70 text-xs uppercase tracking-[0.2em] mb-3">
+                Kundendienst
+              </p>
+              <h1 className="text-white text-2xl md:text-4xl lg:text-5xl font-bold leading-tight mb-3 max-w-xl">
+                Wir nehmen es persönlich
+              </h1>
+              <p className="text-white/90 text-base md:text-xl font-medium max-w-lg">
+                Wir betreuen Sie individuell, denn Ihre persönlichen Anliegen sind unser Auftrag.
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-16 pb-20">
 
         {/* Services Grid */}
         <div className="grid md:grid-cols-3 gap-6 mb-20">

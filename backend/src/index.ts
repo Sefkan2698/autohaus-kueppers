@@ -10,6 +10,7 @@ import uploadRoutes from './routes/upload.routes.js';
 import teamRoutes from './routes/team.routes.js';
 import userRoutes from './routes/user.routes.js';
 import newModelRoutes from './routes/newmodel.routes.js';
+import bewerbungRoutes from './routes/bewerbung.routes.js';
 import corsMiddleware from './middleware/cors.middleware.js';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware.js';
 
@@ -29,7 +30,7 @@ app.use(corsMiddleware);
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 // Health Check
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.json({ message: 'Autohaus API läuft' });
 });
 
@@ -44,6 +45,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/team', teamRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/new-models', newModelRoutes);
+app.use('/api/bewerbung', bewerbungRoutes);
 
 // 404 Handler (nach allen Routes)
 app.use(notFoundHandler);

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Search, MapPin, ArrowRight, Image as ImageIcon } from 'lucide-react';
+import { Search, MapPin, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { API_URL } from '@/lib/constants';
@@ -75,32 +75,36 @@ export default function JobsPage() {
   }
 
   return (
-    <main className="pt-28 pb-20 bg-white min-h-screen">
-      <div className="max-w-4xl mx-auto px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-12">
-          <p className="text-xs text-neutral-500 uppercase tracking-[0.2em] mb-4">
-            Karriere
-          </p>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-6">
-            Werden Sie Teil unseres Teams
-          </h1>
-          <p className="text-neutral-600 text-lg leading-relaxed max-w-2xl">
-            Wir suchen motivierte Mitarbeiter für unser traditionsreiches Autohaus in Goch.
-            Entdecken Sie unsere aktuellen Stellenangebote.
-          </p>
-        </div>
+    <main className="bg-white min-h-screen">
 
-        {/* Hero Image */}
-        <div className="relative aspect-[21/9] mb-12 overflow-hidden">
+      {/* Hero Banner */}
+      <div className="relative w-full pt-24">
+        <div className="relative w-full aspect-[21/9] md:aspect-[3/1] overflow-hidden">
           <Image
             src="/images/job/jobbg2.jpg"
-            alt="Unser Team bei Autohaus Küppers"
+            alt="Karriere bei Autohaus Küppers"
             fill
-            className="object-cover"
+            className="object-cover object-center"
             priority
           />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
+          <div className="absolute inset-0 flex items-center">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full">
+              <p className="text-white/70 text-xs uppercase tracking-[0.2em] mb-3">
+                Karriere
+              </p>
+              <h1 className="text-white text-2xl md:text-4xl lg:text-5xl font-bold leading-tight mb-3 max-w-xl">
+                Werden Sie Teil unseres Teams
+              </h1>
+              <p className="text-white/90 text-base md:text-xl font-medium">
+                Entdecken Sie unsere aktuellen Stellenangebote
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-6 lg:px-8 pt-16 pb-20">
 
         {/* Search & Filter */}
         <div className="mb-10 space-y-4">
@@ -202,10 +206,10 @@ export default function JobsPage() {
               Bewerben Sie sich initiativ. Wir freuen uns, von Ihnen zu hören.
             </p>
             <Link
-              href="/kontakt?betreff=Initiativbewerbung"
+              href="/karriere/bewerbungsformular"
               className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 font-medium hover:bg-primary-dark transition-colors"
             >
-              Initiativ bewerben
+              Jetzt bewerben
               <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
             </Link>
           </div>

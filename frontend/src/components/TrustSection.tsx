@@ -5,9 +5,9 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 
 const stats = [
-  { value: '30+', label: 'Jahre Erfahrung' },
+  { value: '65+', label: 'Jahre Erfahrung' },
   { value: '4.8', label: 'Sterne bei Google' },
-  { value: '1993', label: 'Gegründet' },
+  { value: '50', label: 'Jahre Citroën Partner' },
   { value: '2.', label: 'Generation' },
 ];
 

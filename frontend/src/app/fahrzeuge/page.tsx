@@ -33,7 +33,7 @@ function FahrzeugeContent() {
   // Filter States
   const [filterType, setFilterType] = useState<string>('all');
   const [filterBrand, setFilterBrand] = useState<string>('all');
-  const [filterFuelType, setFilterFuelType] = useState<string>('all');
+  const [filterFuelTypes, setFilterFuelTypes] = useState<string[]>([]);
   const [filterTransmission, setFilterTransmission] = useState<string>('all');
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
 
@@ -41,6 +41,11 @@ function FahrzeugeContent() {
     const typ = searchParams.get('typ');
     if (typ && ['DEMO_CAR', 'USED_CAR', 'YEAR_CAR'].includes(typ)) {
       setFilterType(typ);
+    }
+    const kraftstoff = searchParams.get('kraftstoff');
+    if (kraftstoff) {
+      setFilterFuelTypes(kraftstoff.split(',').filter(Boolean));
+      setShowFilters(true);
     }
   }, [searchParams]);
 
@@ -81,7 +86,7 @@ function FahrzeugeContent() {
       vehicle.model.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType = filterType === 'all' || vehicle.type === filterType;
     const matchesBrand = filterBrand === 'all' || vehicle.brand === filterBrand;
-    const matchesFuelType = filterFuelType === 'all' || vehicle.fuelType === filterFuelType;
+    const matchesFuelType = filterFuelTypes.length === 0 || filterFuelTypes.includes(vehicle.fuelType);
     const matchesTransmission =
       filterTransmission === 'all' || vehicle.transmission === filterTransmission;
     const matchesPrice =
@@ -101,7 +106,7 @@ function FahrzeugeContent() {
   const resetFilters = () => {
     setFilterType('all');
     setFilterBrand('all');
-    setFilterFuelType('all');
+    setFilterFuelTypes([]);
     setFilterTransmission('all');
     setPriceRange({ min: '', max: '' });
   };
@@ -109,7 +114,7 @@ function FahrzeugeContent() {
   const activeFiltersCount = [
     filterType !== 'all',
     filterBrand !== 'all',
-    filterFuelType !== 'all',
+    filterFuelTypes.length > 0,
     filterTransmission !== 'all',
     priceRange.min !== '',
     priceRange.max !== '',
@@ -223,21 +228,34 @@ function FahrzeugeContent() {
               </select>
             </div>
 
-            {/* Fuel Type Filter */}
+            {/* Fuel Type Filter — multi-select */}
             <div>
               <label className="block text-xs text-neutral-500 uppercase tracking-wider mb-2">
                 Kraftstoff
               </label>
-              <select
-                value={filterFuelType}
-                onChange={(e) => setFilterFuelType(e.target.value)}
-                className="w-full px-3 py-2.5 bg-white border border-neutral-200 text-neutral-900 text-sm focus:outline-none focus:border-neutral-400"
-              >
-                <option value="all">Alle</option>
-                {uniqueFuelTypes.map((fuel) => (
-                  <option key={fuel} value={fuel}>{fuel}</option>
-                ))}
-              </select>
+              <div className="flex flex-wrap gap-2">
+                {uniqueFuelTypes.map((fuel) => {
+                  const active = filterFuelTypes.includes(fuel);
+                  return (
+                    <button
+                      key={fuel}
+                      type="button"
+                      onClick={() =>
+                        setFilterFuelTypes((prev) =>
+                          active ? prev.filter((f) => f !== fuel) : [...prev, fuel]
+                        )
+                      }
+                      className={`px-3 py-1.5 text-xs font-medium border transition-colors ${
+                        active
+                          ? 'bg-primary text-white border-primary'
+                          : 'bg-white text-neutral-600 border-neutral-200 hover:border-primary hover:text-primary'
+                      }`}
+                    >
+                      {fuel}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             {/* Transmission Filter */}

@@ -38,9 +38,8 @@ export default function Footer() {
           <div className="bg-white rounded-2xl p-6 shadow-sm flex flex-col">
             <p className="text-primary font-semibold mb-5">Verkauf</p>
             <div className="text-sm text-neutral-600 space-y-1.5">
-              <p><span className="font-medium">Mo.–Do.:</span> 9:00–13:00 & 15:00–18:00 Uhr</p>
+              <p><span className="font-medium">Mo.–Do.:</span> 9:00–13:00 & 15:00–17:30 Uhr</p>
               <p><span className="font-medium">Fr.:</span> 9:00–13:00 & 15:00–17:00 Uhr</p>
-              <p><span className="font-medium">Sa.:</span> 9:00–12:30 Uhr</p>
             </div>
             <div className="flex items-center gap-2 overflow-hidden mt-auto pt-3">
               <Mail className="w-4 h-4 flex-shrink-0 text-neutral-400" strokeWidth={1.5} />
@@ -55,7 +54,6 @@ export default function Footer() {
             <p className="text-primary font-semibold mb-5">Werkstatt</p>
             <div className="text-sm text-neutral-600 space-y-1.5">
               <p><span className="font-medium">Mo.–Fr.:</span> 7:30–12:00 & 13:00–17:00 Uhr</p>
-              <p><span className="font-medium">Sa.:</span> 9:00–12:30 Uhr</p>
             </div>
             <div className="flex items-center gap-2 overflow-hidden mt-auto pt-3">
               <Mail className="w-4 h-4 flex-shrink-0 text-neutral-400" strokeWidth={1.5} />
@@ -81,10 +79,45 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Quick Links */}
+        <div className="mt-12 pt-8 border-t border-neutral-700">
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-x-8 gap-y-3 text-sm text-neutral-300 mb-8">
+            <Link href="/gewerbe" className="hover:text-white transition-colors">
+              Gewerbebereich
+            </Link>
+            <Link href="/dekra-stuetzpunkt" className="hover:text-white transition-colors">
+              DEKRA Stützpunkt
+            </Link>
+            <Link href="/aktionen/citroen-foerderung" className="hover:text-white transition-colors text-primary font-medium">
+              E-Fahrzeuge & Förderung
+            </Link>
+            <Link href="/jobs" className="hover:text-white transition-colors">
+              Karriere
+            </Link>
+            <Link href="/elektro-faq" className="hover:text-white transition-colors">
+              Elektro FAQ
+            </Link>
+            <Link href="/karriere/bewerbungsformular" className="hover:text-white transition-colors">
+              Bewerbungsformular
+            </Link>
+          </div>
+        </div>
+
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-neutral-800 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-neutral-500">
+        <div className="pt-4 border-t border-neutral-700 flex flex-col sm:flex-row justify-between items-center gap-3 text-sm text-neutral-400">
           <p>
             © {new Date().getFullYear()} Autohaus Küppers GmbH
+          </p>
+          <p className="text-neutral-500 text-xs">
+            Created by{' '}
+            <a
+              href="https://sakaits.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-neutral-300 hover:text-white transition-colors"
+            >
+              Saka IT-Solutions
+            </a>
           </p>
           <div className="flex gap-6">
             <Link href="/impressum" className="hover:text-white transition-colors">

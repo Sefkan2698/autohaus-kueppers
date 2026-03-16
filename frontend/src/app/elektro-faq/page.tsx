@@ -119,29 +119,29 @@ export default function ElektroFaqPage() {
         </div>
 
         {/* CTA */}
-        <div className="bg-primary rounded-xl p-8 md:p-12">
+        <div className="bg-neutral-50 border border-neutral-200 rounded-xl p-8 md:p-12">
           <div className="max-w-2xl">
-            <p className="text-xs text-white/60 uppercase tracking-[0.2em] mb-4">
+            <p className="text-xs text-neutral-500 uppercase tracking-[0.2em] mb-4">
               Noch Fragen?
             </p>
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+            <h2 className="text-2xl md:text-3xl font-bold text-neutral-900 mb-4">
               Wir beraten Sie persönlich
             </h2>
-            <p className="text-white/80 mb-8 leading-relaxed">
+            <p className="text-neutral-600 mb-8 leading-relaxed">
               Haben Sie noch offene Fragen zur Elektromobilität oder möchten Sie ein E-Fahrzeug
               Probe fahren? Unser Team in Goch hilft Ihnen gerne weiter.
             </p>
             <div className="flex flex-wrap gap-4">
               <a
                 href={`tel:${CONTENT.phone.replace(/\s/g, '')}`}
-                className="inline-flex items-center gap-2 bg-white text-primary px-6 py-3 font-medium hover:bg-neutral-100 transition-colors rounded"
+                className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 font-medium hover:bg-primary/90 transition-colors rounded"
               >
                 <Phone className="w-4 h-4" strokeWidth={1.5} />
                 {CONTENT.phone}
               </a>
               <Link
                 href="/aktionen/citroen-foerderung"
-                className="inline-flex items-center gap-2 border border-white/40 text-white px-6 py-3 font-medium hover:bg-white/10 transition-colors rounded"
+                className="inline-flex items-center gap-2 border border-neutral-300 text-neutral-700 px-6 py-3 font-medium hover:bg-neutral-100 transition-colors rounded"
               >
                 Elektrofahrzeuge & Förderung
                 <ArrowRight className="w-4 h-4" strokeWidth={1.5} />

@@ -2,8 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
-import { CONTENT, API_URL } from '@/lib/constants';
+import { API_URL } from '@/lib/constants';
 import GoogleMapConsent from '@/components/GoogleMapConsent';
 
 // Betreff-Optionen
@@ -416,105 +415,18 @@ export default function KontaktPage() {
           </p>
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-2 gap-16 mb-20">
-          {/* Contact Information */}
-          <div className="order-2 lg:order-1">
-            <p className="text-xs text-neutral-500 uppercase tracking-wider mb-6">
-              Kontaktinformationen
-            </p>
+        {/* Contact Form */}
+        <div className="max-w-2xl mb-20 bg-neutral-50 p-8 md:p-10">
+          <p className="text-xs text-neutral-500 uppercase tracking-wider mb-4">
+            Nachricht senden
+          </p>
+          <h2 className="text-2xl font-bold text-primary mb-8">
+            Schreiben Sie uns
+          </h2>
 
-            <div className="space-y-4">
-              {/* Verkauf Card */}
-              <div className="bg-white border border-neutral-200 rounded-xl p-6">
-                <h3 className="font-semibold text-primary mb-5">Verkauf</h3>
-                <div className="space-y-3 text-sm">
-                  <div className="flex items-center gap-3 text-neutral-600">
-                    <Mail className="w-4 h-4 flex-shrink-0 text-neutral-400" strokeWidth={1.5} />
-                    <a href="mailto:ht.kueppers@auto-kueppers.de" className="hover:text-neutral-900 transition-colors">
-                      ht.kueppers@auto-kueppers.de
-                    </a>
-                  </div>
-                  <div className="flex items-center gap-3 text-neutral-600">
-                    <Phone className="w-4 h-4 flex-shrink-0 text-neutral-400" strokeWidth={1.5} />
-                    <a href={`tel:${CONTENT.phone.replace(/\s/g, '')}`} className="hover:text-neutral-900 transition-colors">
-                      {CONTENT.phone}
-                    </a>
-                  </div>
-                  <div className="flex items-start gap-3 text-neutral-600">
-                    <MapPin className="w-4 h-4 flex-shrink-0 text-neutral-400 mt-0.5" strokeWidth={1.5} />
-                    <span>{CONTENT.address.street}, {CONTENT.address.city}</span>
-                  </div>
-                  <div className="flex items-start gap-3 text-neutral-600 pt-3 mt-1 border-t border-neutral-100">
-                    <Clock className="w-4 h-4 flex-shrink-0 text-neutral-400 mt-0.5" strokeWidth={1.5} />
-                    <div className="space-y-0.5">
-                      <p><span className="font-medium">Mo.–Do.:</span> 9:00–13:00 & 15:00–18:00 Uhr</p>
-                      <p><span className="font-medium">Fr.:</span> 9:00–13:00 & 15:00–17:00 Uhr</p>
-                      <p><span className="font-medium">Sa.:</span> 9:00–12:30 Uhr</p>
-                    </div>
-                  </div>
-                </div>
-                <a
-                  href="mailto:ht.kueppers@auto-kueppers.de"
-                  className="mt-5 inline-flex items-center gap-2 bg-primary text-white px-4 py-2.5 text-sm font-medium hover:bg-primary-dark transition-colors rounded"
-                >
-                  <Mail className="w-4 h-4" strokeWidth={1.5} />
-                  E-Mail Verkauf
-                </a>
-              </div>
-
-              {/* Werkstatt Card */}
-              <div className="bg-white border border-neutral-200 rounded-xl p-6">
-                <h3 className="font-semibold text-primary mb-5">Werkstatt</h3>
-                <div className="space-y-3 text-sm">
-                  <div className="flex items-center gap-3 text-neutral-600">
-                    <Mail className="w-4 h-4 flex-shrink-0 text-neutral-400" strokeWidth={1.5} />
-                    <a href="mailto:info@auto-kueppers.de" className="hover:text-neutral-900 transition-colors">
-                      info@auto-kueppers.de
-                    </a>
-                  </div>
-                  <div className="flex items-center gap-3 text-neutral-600">
-                    <Phone className="w-4 h-4 flex-shrink-0 text-neutral-400" strokeWidth={1.5} />
-                    <a href={`tel:${CONTENT.phone.replace(/\s/g, '')}`} className="hover:text-neutral-900 transition-colors">
-                      {CONTENT.phone}
-                    </a>
-                  </div>
-                  <div className="flex items-start gap-3 text-neutral-600">
-                    <MapPin className="w-4 h-4 flex-shrink-0 text-neutral-400 mt-0.5" strokeWidth={1.5} />
-                    <span>{CONTENT.address.street}, {CONTENT.address.city}</span>
-                  </div>
-                  <div className="flex items-start gap-3 text-neutral-600 pt-3 mt-1 border-t border-neutral-100">
-                    <Clock className="w-4 h-4 flex-shrink-0 text-neutral-400 mt-0.5" strokeWidth={1.5} />
-                    <div className="space-y-0.5">
-                      <p><span className="font-medium">Mo.–Fr.:</span> 7:30–12:00 & 13:00–17:00 Uhr</p>
-                      <p><span className="font-medium">Sa.:</span> 9:00–12:30 Uhr</p>
-                    </div>
-                  </div>
-                </div>
-                <a
-                  href="mailto:info@auto-kueppers.de"
-                  className="mt-5 inline-flex items-center gap-2 bg-primary text-white px-4 py-2.5 text-sm font-medium hover:bg-primary-dark transition-colors rounded"
-                >
-                  <Mail className="w-4 h-4" strokeWidth={1.5} />
-                  E-Mail Werkstatt
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* Contact Form */}
-          <div className="order-1 lg:order-2 bg-neutral-50 p-8 md:p-10">
-            <p className="text-xs text-neutral-500 uppercase tracking-wider mb-4">
-              Nachricht senden
-            </p>
-            <h2 className="text-2xl font-bold text-primary mb-8">
-              Schreiben Sie uns
-            </h2>
-
-            <Suspense fallback={<ContactFormFallback />}>
-              <ContactFormInner />
-            </Suspense>
-          </div>
+          <Suspense fallback={<ContactFormFallback />}>
+            <ContactFormInner />
+          </Suspense>
         </div>
 
         {/* Google Maps */}

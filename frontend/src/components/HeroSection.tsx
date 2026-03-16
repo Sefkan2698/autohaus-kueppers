@@ -2,11 +2,17 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { X } from 'lucide-react';
 
 export default function HeroSection() {
   const [boxVisible, setBoxVisible] = useState(true);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setBoxVisible(true);
+  }, [pathname]);
 
   return (
     <section className="relative w-full h-[85vh] min-h-[600px] overflow-hidden">

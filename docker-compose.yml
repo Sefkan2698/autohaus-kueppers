@@ -38,6 +38,7 @@ services:
       MAIL_PASSWORD: ${MAIL_PASSWORD}
       MAIL_FROM: ${MAIL_FROM}
       MAIL_TO: ${MAIL_TO}
+      MAIL_TO_2: ${MAIL_TO_2}
       NODE_ENV: production
     volumes:
       - backend_uploads:/app/uploads

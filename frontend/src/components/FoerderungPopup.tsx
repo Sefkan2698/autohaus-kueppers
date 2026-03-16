@@ -1,20 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { X, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
 export default function FoerderungPopup() {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const dismissed = sessionStorage.getItem('popup-dismissed');
-    if (!dismissed) setVisible(true);
-  }, []);
+  const [visible, setVisible] = useState(true);
 
   const close = () => {
-    sessionStorage.setItem('popup-dismissed', '1');
     setVisible(false);
   };
 
